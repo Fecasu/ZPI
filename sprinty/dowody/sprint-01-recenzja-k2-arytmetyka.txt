@@ -1,0 +1,4 @@
+K2 47e0afb: niezalezna proba arytmetyki Pln, wzorzec BigInteger w groszach.
+Ziarno losowania: 20261024; 1000 zestawow losowych oraz 4 przypadki graniczne P11.
+Dokladny wynik: 541; poprawnie odrzucone przekroczenia limitu: 463; razem: 1004; rozbieznosci: 0.
+Dodatkowo 5 niedopuszczalnych cen (w tym przypadki BUG-01-001) odrzuconych jako ArgumentException.

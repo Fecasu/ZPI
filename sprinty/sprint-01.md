@@ -5,14 +5,14 @@
 | Pole | Wartość |
 | --- | --- |
 | Data rozpoczęcia i aktualizacji | 2026-10-24, Europe/Warsaw |
-| Etap | `CZEKA_NA_AKCEPTACJE_KODU` |
-| Aktywna rola | Programista fullstack: K2 gotowa; oczekiwanie na decyzję lidera |
+| Etap | `ZAKONCZONY` |
+| Aktywna rola | Recenzent: zakończona recenzja K2, wynik POZYTYWNA |
 | Rewizja stories | `US5` — scalona zaakceptowana US4 i reguła limitu P11 przyjęta przez lidera |
 | Rewizja kodu | `K2` — commit `47e0afb08c99162d7e1b143f970535801d0fcbdf` |
 | Akceptacja stories | US4: US-01-003, US-01-007, US-01-008, US-01-010 i WU-05; następnie jednoznacznie przyjęty limit P11 dla tego samego zakresu |
-| Akceptacja kodu | Historyczna K1, commit `8108edc`; K2 wymaga osobnej akceptacji |
-| Blokada | Oczekiwanie na akceptację kodu K2; BUG-01-001 pozostaje do potwierdzenia przez recenzenta |
-| Następny krok | Lider akceptuje K2 (47e0afb); recenzent weryfikuje poprawkę i aktualny zakres |
+| Akceptacja kodu | K2, commit `47e0afb`; decyzja lidera z 2026-10-24 |
+| Blokada | Brak; BUG-01-001 zamknięta |
+| Następny krok | Kolejny sprint dopiero po dostarczeniu PDF i poleceniu lidera |
 
 **Cel:** dostarczyć podstawę sklepu WebStore: uruchamialną solucję .NET 10 z React, model danych, trwałą bazę SQL Server, autonomiczne usługi biznesowe i testy.
 
@@ -357,7 +357,7 @@ Brak. P11 rozstrzygnięto decyzją D13.
 - Cytat: „Akceptuję US3 dla sprintu 01 oraz gałąź main w repozytorium Fecasu/ZPI”.
 - Zakres: kompletna **US3**, **US-01-001–US-01-010**, **WU-01–WU-07**, gałąź **main** w **Fecasu/ZPI**.
 
-- Rodzaj: **KOD**, aktualna dla K1.
+- Rodzaj: **KOD**, historyczna dla K1; w zmienionym zakresie zastąpiona akceptacją K2.
 - Lider: lider projektu — użytkownik czatu.
 - Data decyzji: 2026-10-24, Europe/Warsaw. Zapisano o 15:01 (czas odczytu decyzji; dokładny czas wysłania wiadomości nie jest dostępny).
 - Cytat: „Akceptuję K1 (commit 8108edc) dla sprintu 01”.
@@ -375,11 +375,14 @@ Brak. P11 rozstrzygnięto decyzją D13.
 - Cytat: „Przyjmuję proponowany limit i ArgumentException bez zapisu.”
 - Zakres: wyłącznie przedstawiony w pytaniu P11 limit `792281625142643375935439503,35 PLN` dla ceny produktu oraz wyliczanej kwoty zamówienia/faktury, z `ArgumentException` bez zapisu przy przekroczeniu. Uzupełnia przyjętą US4 w kryteriach wskazanych przy US5; nie oznacza akceptacji kodu K2 ani innych zmian wymagań.
 
+
+Akceptacja kodu **K2** została udzielona przez lidera projektu — użytkownika czatu — 2026-10-24, Europe/Warsaw. Zapisano o **15:56** (czas odczytu decyzji; dokładny czas wysłania wiadomości nie jest dostępny). Cytat: **„Akceptuję K2 (commit 47e0afb) dla sprintu 01”**. Zakres: commit `47e0afb08c99162d7e1b143f970535801d0fcbdf`, cały aktualny sprint 01: US-01-001–010 i WU-01–07, z przyjętymi US4 oraz P11, scalonymi jako US5. Zastępuje akceptację K1 dla zmienionego kodu i testów.
+
 ## Implementacja
 
 ### K2 — poprawka według US4 i przyjętego P11 (US5)
 
-**Rewizja do akceptacji:** [K2 — commit 47e0afb08c99162d7e1b143f970535801d0fcbdf](https://github.com/Fecasu/ZPI/commit/47e0afb08c99162d7e1b143f970535801d0fcbdf). Obejmuje poprawkę BUG-01-001 zgodnie z US4 i przyjętym P11, scalonymi jako US5. Zachowuje pozostałe funkcje K1. Kolejny commit karty sprintu opisuje tę samą wersję kodu i testów.
+**Rewizja zaakceptowana:** [K2 — commit 47e0afb08c99162d7e1b143f970535801d0fcbdf](https://github.com/Fecasu/ZPI/commit/47e0afb08c99162d7e1b143f970535801d0fcbdf). Obejmuje poprawkę BUG-01-001 zgodnie z US4 i przyjętym P11, scalonymi jako US5. Zachowuje pozostałe funkcje K1. Kolejny commit karty sprintu opisuje tę samą wersję kodu i testów.
 
 | Zakres | Dostarczona zmiana | Weryfikacja programisty |
 | --- | --- | --- |
@@ -398,7 +401,7 @@ Brak. P11 rozstrzygnięto decyzją D13.
 
 Pierwsza próba granicy `decimal.MaxValue` wykazała ograniczenie skali SQLClient i doprowadziła do jawnej decyzji P11. Końcowe testy sprawdzają przyjęty limit i kontrolowane odrzucenie większych wartości. Instrukcja aktualizacji bazy, reguły kwot i reakcja na niezgodne dane znajdują się w README.
 
-**Stan poprawki BUG-01-001:** naprawa potwierdzona testami programisty, oczekuje na niezależną recenzję po akceptacji K2. **Pozostałe znane problemy implementacji:** brak w sprawdzonym zakresie. Limit D13 jest przyjętą regułą, a nie otwartą usterką. Migracja celowo zatrzymuje się na dawnych danych z większą precyzją; wymagałyby one jawnej decyzji o korekcie zamiast automatycznego zaokrąglania.
+**Stan poprawki BUG-01-001:** naprawa potwierdzona testami programisty oraz końcową recenzją K2; usterka zamknięta. **Pozostałe znane problemy implementacji:** brak w sprawdzonym zakresie. Limit D13 jest przyjętą regułą, a nie otwartą usterką. Migracja celowo zatrzymuje się na dawnych danych z większą precyzją; wymagałyby one jawnej decyzji o korekcie zamiast automatycznego zaokrąglania.
 
 ### Historyczna K1 zaakceptowana przez lidera
 
@@ -408,7 +411,7 @@ Repozytorium: [Fecasu/ZPI, main](https://github.com/Fecasu/ZPI/tree/main). Zdaln
 
 **Stan publikacji:** K1 i karta sprintu zostały wysłane na `main`. `git ls-remote origin refs/heads/main` potwierdziło zdalny commit `a75be4aaade30b976e588edeebf6d4d0e79a98ef`, obejmujący K1 oraz kartę sprintu. Końcowa aktualizacja dokumentacyjna zapisuje ten wynik bez zmian kodu i testów.
 
-### Dostarczone rozwiązanie
+### Dostarczone rozwiązanie K1
 
 - .NET 10, EF Core i Identity 10.0.13; SDK użyte do weryfikacji: 10.0.401.
 - Sześć projektów w `WebStore.sln`: pięć warstw oraz testy. Referencje odpowiadają US-01-001.
@@ -420,7 +423,7 @@ Repozytorium: [Fecasu/ZPI, main](https://github.com/Fecasu/ZPI/tree/main). Zdaln
 
 Pełne polecenia odtworzenia i konfiguracja bez sekretów: [README.md](../README.md). Migracja jest wykonywana jawnie przed uruchomieniem; baza aplikacji nie otrzymuje danych testowych. Testy używają odrębnej losowej bazy, resetują dane przed każdym przypadkiem i usuwają własną bazę po zakończeniu. Kwoty korzystają z SQL `decimal(28,8)`, masa z `float`/`real`, a suma stanów w VM z `long`; szczegóły kontraktu opisano w README.
 
-### Powiązanie stories z implementacją i testami
+### Powiązanie stories z implementacją i testami K1
 
 | Zakres | Implementacja | Weryfikacja programisty |
 | --- | --- | --- |
@@ -436,7 +439,7 @@ Pełne polecenia odtworzenia i konfiguracja bez sekretów: [README.md](../README
 | US-01-010, KA-01–06 | `WebStore.Tests`, fixture `SqlDatabase` i `ServiceTest` | 81 testów wykonanych na SQL Server, bez pominięć; dowód TRX poniżej. |
 | WU-01–07 | Pięć interfejsów i usług, `BaseService`, `StoreMapper` | `ServiceContractTests` wykonuje wspólne scenariusze dla każdej usługi; testy domenowe obejmują operacje powiązań. Helper `Rejected` sprawdza wyjątek, log, identyczny stan całej domeny w nowym kontekście oraz brak późniejszego zapisu odrzuconych zmian. |
 
-### Wykonane kontrole — 2026-10-24
+### Wykonane kontrole programisty K1 — 2026-10-24
 
 | Polecenie / scenariusz | Rzeczywisty wynik |
 | --- | --- |
@@ -456,9 +459,9 @@ Pełne polecenia odtworzenia i konfiguracja bez sekretów: [README.md](../README
 
 ## Recenzja
 
-### K1 / US3 — wynik z 2026-10-24
+### K1 / US3 — historyczny wynik z 2026-10-24
 
-**Werdykt: `POPRAWKI`.** Potwierdzono jedną usterkę, BUG-01-001, dotyczącą zachowania ceny przy zapisie. Wynik 81 istniejących testów jest pozytywny, lecz dodatkowa próba recenzenta ujawniła przypadek nieobjęty tym zestawem. Sprint pozostaje otwarty.
+**Werdykt: `POPRAWKI`.** Potwierdzono jedną usterkę, BUG-01-001, dotyczącą zachowania ceny przy zapisie. Wynik 81 istniejących testów jest pozytywny, lecz dodatkowa próba recenzenta ujawniła przypadek nieobjęty tym zestawem. Na tym etapie sprint wymagał poprawki; końcowy wynik K2 znajduje się poniżej.
 
 Przed oceną sprawdzono zgodność kodu i testów z zaakceptowanym commitem `8108edc7299bc424649a72110e9a5d648c49efba`. Późniejsze commity zmieniały tylko kartę sprintu. PDF zachował wskazaną wyżej sumę SHA-256. Ocena dotyczy **US3**, zachowanej w [karcie z commita 6fd9e8c](https://github.com/Fecasu/ZPI/blob/6fd9e8cfed3cfb7b4c7dc160b7fd90d75256cde0/sprinty/sprint-01.md), a nie doprecyzowania P10 przygotowywanego do następnej rewizji. Recenzent nie zmienił aplikacji ani testów implementacji.
 
@@ -477,84 +480,107 @@ Przed oceną sprawdzono zgodność kodu i testów z zaakceptowanym commitem `810
 
 Skróty scenariuszy w tabeli: **P** — [ProductTests](../WebStore.Tests/ProductTests.cs), **A** — [AddressTests](../WebStore.Tests/AddressTests.cs), **S** — [StoreTests](../WebStore.Tests/StoreTests.cs), **O** — [OrderTests](../WebStore.Tests/OrderTests.cs), **I** — [InvoiceTests](../WebStore.Tests/InvoiceTests.cs), **D** — [DatabaseTests](../WebStore.Tests/DatabaseTests.cs), **C** — [ServiceContractTests](../WebStore.Tests/ServiceContractTests.cs). Wszystkie wykonano w R2. „Inspekcja” oznacza R5. Helper `Rejected` w [ServiceTest](../WebStore.Tests/Infrastructure/ServiceTest.cs) porównuje stan wszystkich danych i relacji przed błędem oraz po nim w nowym kontekście, kontroluje logger i brak odłożonych zmian. Skróty nie oznaczają osobnych, niewykonanych testów.
 
-### Wynik każdego kryterium US3
+### Historyczny wynik kryteriów K1
+
+K1 / US3: **68 kryteriów, 63 ZALICZONE, 5 NIEZALICZONE, 0 NIEZWERYFIKOWANE**. Pięć niezgodności wynikało z BUG-01-001 (US-01-003-KA-01 i KA-02, US-01-009-KA-04, US-01-010-KA-05 oraz WU-01). Pełna poprzednia tabela pozostaje w [karcie z commita df978e1](https://github.com/Fecasu/ZPI/blob/df978e16b9efeee071755e0336e8f8a2e1991293/sprinty/sprint-01.md). Powyższe dowody i opis usterki zachowano; poniższa tabela przedstawia bieżący wynik K2.
+
+### K2 / US5 — recenzja końcowa z 2026-10-24
+
+**Werdykt: POZYTYWNA.** Oceniono zaakceptowany commit `47e0afb08c99162d7e1b143f970535801d0fcbdf` względem US4 i przyjętej reguły P11, scalonych jako US5. Kod, testy i README są zgodne z tym commitem; następny commit zmieniał wyłącznie kartę sprintu. PDF ma niezmienioną sumę SHA-256. Recenzent nie zmieniał kodu aplikacji ani testów implementacji.
+
+Środowisko: Windows, SDK .NET 10.0.401, SQL Server LocalDB 2025. Ponownie uruchomiono wszystkie testy pięciu usług i migracji w izolowanych bazach. Dla niezmienionych elementów zachowano inspekcję z K1, potwierdzoną porównaniem Git i pełną regresją K2. Zakres nadal obejmuje szkielet webowy bez biznesowych endpointów HTTP i ekranów zakupów.
+
+| Dowód K2 | Metoda / polecenie | Wynik |
+| --- | --- | --- |
+| K2-R1 | `dotnet restore --locked-mode`, `dotnet build --no-restore` | Restore poprawny; sześć projektów zbudowanych, 0 błędów i 0 ostrzeżeń. Pierwszy restore blokowały uprawnienia piaskownicy do NuGet.Config; powtórzenie z uprawnieniami powiodło się. |
+| K2-R2 | `dotnet test --no-build --no-restore --logger 'trx;LogFileName=sprint-01-recenzja-k2.trx' --results-directory TestResults` | **100 zaliczonych, 0 niepowodzeń, 0 pominiętych**, 17 s. [Niezależny raport TRX](dowody/sprint-01-recenzja-k2-tests.trx). Obejmuje cenę, kwoty, granice, powiązania i obie migracje. |
+| K2-R3 | `dotnet run --project WebStore.Web --no-build --no-restore`, żądania HTTP i przeglądarka | HTML i skrypt React zwracają 200. Tytuł „WebStore · ZPI” i polska strona szkieletu są wyrenderowane. [Zrzut z recenzji K2](dowody/sprint-01-recenzja-k2-web.png). |
+| K2-R4 | Niezależna próba `Pln.Total`, wzorzec BigInteger w groszach, ziarno 20261024 | 1000 losowych zestawów i 4 przypadki graniczne: 541 dokładnych wyników, 463 poprawne odrzucenia, 0 rozbieżności. Ponadto 5 błędnych cen odrzuconych przez walidację. [Wynik próby](dowody/sprint-01-recenzja-k2-arytmetyka.txt). |
+| K2-R5 | Inspekcja różnic K1–K2, Pln, usług, migracji i testów | Walidacja poprzedza mapowanie i zapis. Liczenie całkowitych groszy zachowuje precyzję; przepełnienie zwraca ArgumentException. Migracja sprawdza dane przed zmianą skali. Zakres testów i porównania pełnego stanu po błędach potwierdzone. |
+| K2-R6 | `git diff 47e0afb --name-only`, historia Git i potwierdzenie zdalnego main | Kod odpowiada zaakceptowanej K2; różnice dotyczą jedynie dokumentacji recenzji i jej dowodów. K2 opublikowana w Fecasu/ZPI na main. |
+
+Skróty P, A, S, O, I, D i C oznaczają klasy testów wskazane przy dowodach K1, wykonane ponownie w K2-R2. **M** oznacza [MoneyMigrationTests](../WebStore.Tests/MoneyMigrationTests.cs). K2-R4 jest dodatkową próbą recenzenta, niezależną od 100 testów implementacji. Tymczasowy program próby usunięto po zachowaniu wyników.
+
+### Bieżący wynik każdego kryterium — K2 / US5
 
 | Kryterium | Metoda / scenariusz | Oczekiwany wynik | Wynik rzeczywisty | Dowód | Status |
 | --- | --- | --- | --- | --- | --- |
-| US-01-001-KA-01 | Budowanie solucji | Wszystkie projekty net10.0 bez błędów | Sześć projektów zbudowanych | R1 | ZALICZONE |
-| US-01-001-KA-02 | Inspekcja plików csproj | Referencje między warstwami zgodne z kryterium | Wszystkie wymagane referencje obecne | R5 | ZALICZONE |
-| US-01-001-KA-03 | Uruchomienie hosta, odczyt strony w przeglądarce | Dostępny szkielet React przez ASP.NET Core | Strona wyrenderowana na porcie 5100 | R3 | ZALICZONE |
-| US-01-001-KA-04 | Wykonanie procedury README | Build, baza, uruchomienie i testy bez rozszerzeń edytora | Procedura wykonana; migracja również w nowej bazie próby | R1–R4, README | ZALICZONE |
-| US-01-001-KA-05 | Inspekcja Git i publikacji | K1 z kodem, migracją, testami i instrukcją na main | K1 obecna w historii zdalnej; zachowany commit początkowy | R6 | ZALICZONE |
-| US-01-002-KA-01 | Inspekcja Users.cs | Wymagane dziedziczenie i pola wspólne | Typy i pola zgodne | R5 | ZALICZONE |
-| US-01-002-KA-02 | D: odczyt użytkowników nowym kontekstem | Zachowane typy i dane wspólne | Asercje trzech podtypów przechodzą | R2/D | ZALICZONE |
-| US-01-002-KA-03 | P, O: relacje produktów i zamówień | Właściwy dostawca i klient, relacje 1:M | Relacje odtworzone z SQL | R2/P,O | ZALICZONE |
-| US-01-002-KA-04 | D, S: pracownik i sklep | Jeden istniejący sklep oraz odziedziczone dane | Odczyt poprawny, brak sklepu odrzucony | R2/D,S | ZALICZONE |
-| US-01-003-KA-01 | P, C oraz dodatkowe dodanie produktu | Wejście, wynik VM i zapis odpowiadają sobie | Dla 1,123456789 wynik VM różni się od SQL | R2/P,C; R4 | NIEZALICZONE |
-| US-01-003-KA-02 | P oraz dodatkowa aktualizacja ceny | Nowa cena zachowana bez dodatkowego produktu | 1,987654321 zapisano jako 1,98765432 | R2/P; R4 | NIEZALICZONE |
-| US-01-003-KA-03 | C: null wejścia Product | ArgumentNullException, brak zapisu | Wyjątek i niezmieniony stan potwierdzone | R2/C | ZALICZONE |
-| US-01-003-KA-04 | Inspekcja CatalogVm; C: błędy i logger | Pola VM, opcjonalne ID, przekazanie i log błędu | Pola obecne; testy wyjątków i logów przechodzą | R2/C; R5 | ZALICZONE |
-| US-01-003-KA-05 | P: błędne pola i relacje | Uzgodnione wyjątki bez zapisu | Nazwa, opis, obraz, cena ≤ 0, masa i błędne FK odrzucone | R2/P | ZALICZONE |
-| US-01-003-KA-06 | C: ujemne i brakujące ID Product | ArgumentException / KeyNotFoundException, brak dodania | Oczekiwane wyjątki, stan bez zmian | R2/C | ZALICZONE |
-| US-01-003-KA-07 | P, D i inspekcja Category | Relacja do kategorii z Name i Tag | Dane odczytane; pusta kategoria odrzucona przez SQL | R2/P,D; R5 | ZALICZONE |
-| US-01-004-KA-01 | P, C: pojedynczy odczyt | Pasujący produkt w ProductVm | Właściwy zapisany produkt i pola VM | R2/P,C | ZALICZONE |
-| US-01-004-KA-02 | P, C: filtrowana lista | Wszystkie i wyłącznie pasujące produkty | Zbiory ID zgodne z przygotowanymi danymi | R2/P,C | ZALICZONE |
-| US-01-004-KA-03 | P: dwa produkty | Dokładnie dwa produkty bez filtra | Liczba 2 i oczekiwany zbiór ID | R2/P | ZALICZONE |
-| US-01-004-KA-04 | C: null predykatu; inspekcja VM | ArgumentNullException i wymagane pola | Wyjątek potwierdzony, pola obecne | R2/C; R5 | ZALICZONE |
-| US-01-004-KA-05 | C: brak wyników i pusta baza | null lub pusta lista | Oczekiwane puste wyniki | R2/C | ZALICZONE |
-| US-01-004-KA-06 | P: stany 2 i 3 oraz brak stanów | Suma 5 albo 0 na liście i pojedynczo | Oczekiwane sumy odczytane | R2/P | ZALICZONE |
-| US-01-005-KA-01 | Inspekcja Customer i Address | Adresy jako encje i relacje | Nawigacje Address oraz FK obecne | R5 | ZALICZONE |
-| US-01-005-KA-02 | A: klient z dwoma adresami | Odtworzenie relacji 1:M | Nowy kontekst odczytuje oba adresy | R2/A | ZALICZONE |
-| US-01-005-KA-03 | Inspekcja kontraktu, BaseService i VM | Publiczny interfejs, dziedziczenie i VM | Struktura zgodna, usługa tworzona w testach | R2/A; R5 | ZALICZONE |
-| US-01-005-KA-04 | A, C: pola adresu i ich walidacja | Zapis pól; opcjonalna ulica/lokal; błędy bez zapisu | Poprawne dane zachowane, wymagane braki odrzucone | R2/A,C | ZALICZONE |
-| US-01-005-KA-05 | A: właściciele i brakujące ID | Jeden istniejący klient albo sklep | Błędne kombinacje i brakujące ID odrzucone | R2/A | ZALICZONE |
-| US-01-005-KA-06 | A: wybór adresów | Własne, różne, wspólne albo puste wskazania; obce odrzucone | Wszystkie wskazane warianty przechodzą | R2/A | ZALICZONE |
-| US-01-005-KA-07 | A: przeniesienie używanego adresu | Blokada do wyczyszczenia wskazań, potem przeniesienie | Oba rodzaje wskazań chronione, późniejsze przeniesienie poprawne | R2/A | ZALICZONE |
-| US-01-006-KA-01 | Inspekcja modeli | Sklep i pracownik dziedziczący po User | Typy obecne i zgodne | R5 | ZALICZONE |
-| US-01-006-KA-02 | S: dwa adresy i dwóch pracowników | Zachowanie wszystkich powiązań | Odczytane oczekiwane zestawy ID | R2/S | ZALICZONE |
-| US-01-006-KA-03 | Inspekcja kontraktu i uruchomienie DI | Interfejs, BaseService, VM, utworzenie usługi | DI z walidacją tworzy StoreService | R2/S; R5 | ZALICZONE |
-| US-01-006-KA-04 | C, S: zapis, edycja i odczyt sklepu | Wymagana nazwa, ID i powiązania | Nazwa zmieniona, pusta odrzucona, relacje odczytane | R2/C,S | ZALICZONE |
-| US-01-006-KA-05 | S: przypisanie i przeniesienie pracownika | Jeden sklep, odpowiednie wyjątki przy błędzie | Przeniesienie oraz przypadki błędne zgodne | R2/S | ZALICZONE |
-| US-01-007-KA-01 | Inspekcja Sales; O, C: zapis i daty | Wymagane pola, opcjonalna wysyłka, poprawne daty | Pola zgodne; data wcześniejsza odrzucona, numer aktualizowany | R2/O,C; R5 | ZALICZONE |
-| US-01-007-KA-02 | O: zamówienie z różnymi produktami | Odtworzenie pozycji i ilości | Dwie pozycje, poprawne kwoty i relacje | R2/O | ZALICZONE |
-| US-01-007-KA-03 | O: produkt w wielu zamówieniach | N:M przez OrderProduct | Dwa zamówienia klienta i powiązania produktu odczytane | R2/O | ZALICZONE |
-| US-01-007-KA-04 | Inspekcja kontraktu i VM | Interfejs, BaseService, wejściowy i wynikowy VM | Struktura zgodna, testy wywołują interfejs | R2/O; R5 | ZALICZONE |
-| US-01-007-KA-05 | O: błędne pozycje, klient i produkt | Uzgodnione wyjątki, brak częściowego zapisu | Błędne ilości, duplikaty, brak pozycji i ID odrzucone | R2/O | ZALICZONE |
-| US-01-007-KA-06 | O: kwoty przy zapisie i edycji | 35 PLN; zmiana katalogu nie zmienia zapisu; edycja przelicza | Kwota 35 zachowana, po edycji 90 | R2/O | ZALICZONE |
-| US-01-007-KA-07 | O: zapis i edycja przy stanie 7 | Stan produktu bez zmian | Po operacjach nadal 7 | R2/O | ZALICZONE |
-| US-01-007-KA-08 | O: zamówienie na fakturze i zwolnienie | Edycja zablokowana do zwolnienia | ArgumentException, potem poprawna edycja | R2/O | ZALICZONE |
-| US-01-008-KA-01 | Inspekcja Sales i schematu | Invoice i relacja Order.Invoice | Encja oraz relacja obecne | R2/D; R5 | ZALICZONE |
-| US-01-008-KA-02 | I: faktura dla dwóch zamówień | Oba zamówienia powiązane | VM i nowy kontekst potwierdzają powiązania | R2/I | ZALICZONE |
-| US-01-008-KA-03 | Inspekcja kontraktu i VM | Interfejs, BaseService i VM | Struktura zgodna, testy wywołują interfejs | R2/I; R5 | ZALICZONE |
-| US-01-008-KA-04 | I, C: numer, data i duplikat | Zapis danych; duplikat numeru odrzucony | Dane zachowane, odpowiedni wyjątek bez zmian | R2/I,C | ZALICZONE |
-| US-01-008-KA-05 | I: zestawy zamówień | Co najmniej jedno, wspólny klient, brak podwójnej faktury | Poprawny zestaw zapisany; błędne zestawy odrzucone | R2/I | ZALICZONE |
-| US-01-008-KA-06 | I: suma zapisanych zamówień | 35 + 20 = 55 PLN | 55 PLN także po zmianie ceny katalogowej | R2/I | ZALICZONE |
-| US-01-008-KA-07 | I: zmiana zestawu, obca faktura, błąd SQL | Zastąpienie zestawu albo zachowanie starego po błędzie | Zwolnienie/przypisanie poprawne, rollback potwierdzony | R2/I | ZALICZONE |
-| US-01-009-KA-01 | Migracja w nowej bazie, D | Utworzenie schematu SQL | Migracja zastosowana bez błędów | R2/D; R4 | ZALICZONE |
-| US-01-009-KA-02 | D: model EF i sys.foreign_keys | Osiem relacji 1:M i N:M przez OrderProduct | Wszystkie FK i złożony klucz potwierdzone | R2/D | ZALICZONE |
-| US-01-009-KA-03 | D: tabele i odczyt podtypów | Wspólna tabela i zachowane typy TPH | AspNetUsers i trzy podtypy potwierdzone | R2/D | ZALICZONE |
-| US-01-009-KA-04 | D oraz dodatkowy odczyt ceny w nowym kontekście | Zachowane wartości i powiązania | Relacje poprawne; cena 1,123456789 zmieniona w SQL | R2/D; R4 | NIEZALICZONE |
-| US-01-009-KA-05 | A, O, I, D: opcjonalność i właściciele | Dopuszczone null; jeden właściciel adresu i sklep pracownika | Scenariusze usług oraz ograniczenia SQL zgodne | R2/A,O,I,D | ZALICZONE |
-| US-01-009-KA-06 | D, P: ujemny/zerowy stan i suma | Ujemny odrzucony, zero dopuszczone, suma poprawna | Oczekiwane zachowanie SQL i VM | R2/D,P | ZALICZONE |
-| US-01-010-KA-01 | Wykonanie całego zestawu | Testy wszystkich pięciu usług i liczby wyników | 81/81, bez pominięć | R2 | ZALICZONE |
-| US-01-010-KA-02 | Inspekcja i wykonanie P, C | Scenariusze CRUD bez usuwania, filtrów i uzgodnionych błędów | Wymienione scenariusze istnieją i przechodzą; P10 nie należało do US3 | R2/P,C; R5 | ZALICZONE |
-| US-01-010-KA-03 | Inspekcja i wykonanie A, S, O, I, C | Operacje pozostałych usług i błędne przypadki | Zapis, odczyty i operacje powiązań pokryte | R2/A,S,O,I,C; R5 | ZALICZONE |
-| US-01-010-KA-04 | Inspekcja fixture oraz P | Izolacja i porównanie z danymi wejściowymi | Losowa baza, reset przed każdym testem, jawny zestaw dwóch ID | R2/P; R5 | ZALICZONE |
-| US-01-010-KA-05 | DI, inspekcja asercji oraz próba dodatkowa | Poprawne przejście VM–encja–SQL w odbieranym zakresie | DI działa, lecz testy pomijają rozbieżność ceny z BUG-01-001 | R2; R4; R5 | NIEZALICZONE |
-| US-01-010-KA-06 | C i helper Rejected, testy powiązań | Kontrakty pięciu usług i brak częściowego zapisu | Testy kontraktów i porównań stanu przechodzą | R2/C,A,S,I | ZALICZONE |
-| WU-01 | C oraz własna próba ceny | Operacje zapisują i zwracają zgodne dane | Kontrakty dostępne, lecz VM ceny nie odpowiada zapisowi SQL | R2/C; R4 | NIEZALICZONE |
-| WU-02 | C dla pięciu usług | Zachowanie ID zgodne z kontraktem | null/0 dodaje, dodatnie aktualizuje, błędne ID odrzucone | R2/C | ZALICZONE |
-| WU-03 | C, inspekcja odczytów | Pierwszy pasujący lub null; właściwe listy | Filtry i puste wyniki zgodne, użyte FirstOrDefault | R2/C; R5 | ZALICZONE |
-| WU-04 | C i testy operacji powiązań | Null obowiązkowego wejścia odrzucony | ArgumentNullException i log dla każdej usługi | R2/C,A,S | ZALICZONE |
-| WU-05 | Testy błędów danych i relacji w zakresie US3 | Uzgodnione wyjątki, wymagane napisy i typy relacji | Scenariusze US3 przechodzą; precyzję wyjaśniono osobno w P10 | R2/P,A,S,O,I,C | ZALICZONE |
-| WU-06 | Rejected, wymuszony błąd SQL, własna próba | Brak częściowego zapisu i uszkodzonych powiązań | Stan zachowany również po błędzie SQL i odrzuconej małej cenie | R2; R4 | ZALICZONE |
-| WU-07 | Inspekcja i testy DI, mappera, loggera | Wymagane zależności, wyniki i błędy dostępne wywołującemu | Zależności poprawne, wyjątki przekazywane i logowane | R2; R5 | ZALICZONE |
+| US-01-001-KA-01 | Budowanie solucji | Wszystkie projekty net10.0 bez błędów | Sześć projektów, 0 błędów i 0 ostrzeżeń | K2-R1 | ZALICZONE |
+| US-01-001-KA-02 | Inspekcja plików csproj | Referencje między warstwami zgodne z kryterium | Wszystkie wymagane referencje obecne | K2-R5 | ZALICZONE |
+| US-01-001-KA-03 | Uruchomienie hosta, HTTP i przeglądarka | Dostępny szkielet React przez ASP.NET Core | HTML i skrypt HTTP 200, strona wyrenderowana | K2-R3 | ZALICZONE |
+| US-01-001-KA-04 | Procedura README i kontrola zmienionego zakresu | Odtwarzalne budowanie, migracja, uruchomienie i testy | Odtworzone zależności .NET; build, migracje testowe i host poprawne; klient niezmieniony względem wcześniej sprawdzonego K1 | K2-R1,R2,R3,R5; historyczny R3 | ZALICZONE |
+| US-01-001-KA-05 | Kontrola historii i publikacji Git | Kod, migracje, testy i instrukcja na main | K2 47e0afb obecna na main; pierwotna historia zachowana | K2-R6 | ZALICZONE |
+| US-01-002-KA-01 | Inspekcja Users.cs | Wymagane dziedziczenie i pola wspólne | Typy i pola zgodne | K2-R5 | ZALICZONE |
+| US-01-002-KA-02 | D: odczyt użytkowników nowym kontekstem | Zachowane typy i dane wspólne | Asercje trzech podtypów przechodzą | K2-R2/D | ZALICZONE |
+| US-01-002-KA-03 | P, O: relacje produktów i zamówień | Właściwy dostawca i klient, relacje 1:M | Relacje odtworzone z SQL | K2-R2/P,O | ZALICZONE |
+| US-01-002-KA-04 | D, S: pracownik i sklep | Jeden istniejący sklep oraz odziedziczone dane | Odczyt poprawny, brak sklepu odrzucony | K2-R2/D,S | ZALICZONE |
+| US-01-003-KA-01 | P, C: dodanie i odczyt w nowym kontekście SQL | Zapisane dane i wynik VM zgodne z dopuszczalnym wejściem | Identyczne ceny od 0,01 do limitu P11; pola i powiązania zachowane | K2-R2/P,C | ZALICZONE |
+| US-01-003-KA-02 | P: aktualizacja ceny i nowy kontekst SQL | Nowa dopuszczalna cena bez nowego rekordu | Cena zgodna w VM, usłudze i SQL; liczba produktów nie rośnie | K2-R2/P | ZALICZONE |
+| US-01-003-KA-03 | C: null wejścia Product | ArgumentNullException, brak zapisu | Wyjątek i niezmieniony stan potwierdzone | K2-R2/C | ZALICZONE |
+| US-01-003-KA-04 | Inspekcja CatalogVm; C: błędy i logger | Pola VM, opcjonalne ID, przekazanie i log błędu | Pola obecne; testy wyjątków i logów przechodzą | K2-R2/C; K2-R5 | ZALICZONE |
+| US-01-003-KA-05 | P: błędne pola i relacje | Uzgodnione wyjątki bez zapisu | Nazwa, opis, obraz, cena ≤ 0, masa i błędne FK odrzucone | K2-R2/P | ZALICZONE |
+| US-01-003-KA-06 | C: ujemne i brakujące ID Product | ArgumentException / KeyNotFoundException, brak dodania | Oczekiwane wyjątki, stan bez zmian | K2-R2/C | ZALICZONE |
+| US-01-003-KA-07 | P, D i inspekcja Category | Relacja do kategorii z Name i Tag | Dane odczytane; pusta kategoria odrzucona przez SQL | K2-R2/P,D; K2-R5 | ZALICZONE |
+| US-01-003-KA-08 | P: dopuszczalne i niedopuszczalne ceny przy dodaniu i edycji | Do dwóch miejsc i limitu P11, pozostałe wartości odrzucone bez zapisu | 0,01; 1,2; 1,23; 1,2300 i limit zachowane; błędna precyzja i ceny ponad limit odrzucone | K2-R2/P; K2-R4 | ZALICZONE |
+| US-01-004-KA-01 | P, C: pojedynczy odczyt | Pasujący produkt w ProductVm | Właściwy zapisany produkt i pola VM | K2-R2/P,C | ZALICZONE |
+| US-01-004-KA-02 | P, C: filtrowana lista | Wszystkie i wyłącznie pasujące produkty | Zbiory ID zgodne z przygotowanymi danymi | K2-R2/P,C | ZALICZONE |
+| US-01-004-KA-03 | P: dwa produkty | Dokładnie dwa produkty bez filtra | Liczba 2 i oczekiwany zbiór ID | K2-R2/P | ZALICZONE |
+| US-01-004-KA-04 | C: null predykatu; inspekcja VM | ArgumentNullException i wymagane pola | Wyjątek potwierdzony, pola obecne | K2-R2/C; K2-R5 | ZALICZONE |
+| US-01-004-KA-05 | C: brak wyników i pusta baza | null lub pusta lista | Oczekiwane puste wyniki | K2-R2/C | ZALICZONE |
+| US-01-004-KA-06 | P: stany 2 i 3 oraz brak stanów | Suma 5 albo 0 na liście i pojedynczo | Oczekiwane sumy odczytane | K2-R2/P | ZALICZONE |
+| US-01-005-KA-01 | Inspekcja Customer i Address | Adresy jako encje i relacje | Nawigacje Address oraz FK obecne | K2-R5 | ZALICZONE |
+| US-01-005-KA-02 | A: klient z dwoma adresami | Odtworzenie relacji 1:M | Nowy kontekst odczytuje oba adresy | K2-R2/A | ZALICZONE |
+| US-01-005-KA-03 | Inspekcja kontraktu, BaseService i VM | Publiczny interfejs, dziedziczenie i VM | Struktura zgodna, usługa tworzona w testach | K2-R2/A; K2-R5 | ZALICZONE |
+| US-01-005-KA-04 | A, C: pola adresu i ich walidacja | Zapis pól; opcjonalna ulica/lokal; błędy bez zapisu | Poprawne dane zachowane, wymagane braki odrzucone | K2-R2/A,C | ZALICZONE |
+| US-01-005-KA-05 | A: właściciele i brakujące ID | Jeden istniejący klient albo sklep | Błędne kombinacje i brakujące ID odrzucone | K2-R2/A | ZALICZONE |
+| US-01-005-KA-06 | A: wybór adresów | Własne, różne, wspólne albo puste wskazania; obce odrzucone | Wszystkie wskazane warianty przechodzą | K2-R2/A | ZALICZONE |
+| US-01-005-KA-07 | A: przeniesienie używanego adresu | Blokada do wyczyszczenia wskazań, potem przeniesienie | Oba rodzaje wskazań chronione, późniejsze przeniesienie poprawne | K2-R2/A | ZALICZONE |
+| US-01-006-KA-01 | Inspekcja modeli | Sklep i pracownik dziedziczący po User | Typy obecne i zgodne | K2-R5 | ZALICZONE |
+| US-01-006-KA-02 | S: dwa adresy i dwóch pracowników | Zachowanie wszystkich powiązań | Odczytane oczekiwane zestawy ID | K2-R2/S | ZALICZONE |
+| US-01-006-KA-03 | Inspekcja kontraktu i uruchomienie DI | Interfejs, BaseService, VM, utworzenie usługi | DI z walidacją tworzy StoreService | K2-R2/S; K2-R5 | ZALICZONE |
+| US-01-006-KA-04 | C, S: zapis, edycja i odczyt sklepu | Wymagana nazwa, ID i powiązania | Nazwa zmieniona, pusta odrzucona, relacje odczytane | K2-R2/C,S | ZALICZONE |
+| US-01-006-KA-05 | S: przypisanie i przeniesienie pracownika | Jeden sklep, odpowiednie wyjątki przy błędzie | Przeniesienie oraz przypadki błędne zgodne | K2-R2/S | ZALICZONE |
+| US-01-007-KA-01 | Inspekcja Sales; O, C: zapis i daty | Wymagane pola, opcjonalna wysyłka, poprawne daty | Pola zgodne; data wcześniejsza odrzucona, numer aktualizowany | K2-R2/O,C; K2-R5 | ZALICZONE |
+| US-01-007-KA-02 | O: zamówienie z różnymi produktami | Odtworzenie pozycji i ilości | Dwie pozycje, poprawne kwoty i relacje | K2-R2/O | ZALICZONE |
+| US-01-007-KA-03 | O: produkt w wielu zamówieniach | N:M przez OrderProduct | Dwa zamówienia klienta i powiązania produktu odczytane | K2-R2/O | ZALICZONE |
+| US-01-007-KA-04 | Inspekcja kontraktu i VM | Interfejs, BaseService, wejściowy i wynikowy VM | Struktura zgodna, testy wywołują interfejs | K2-R2/O; K2-R5 | ZALICZONE |
+| US-01-007-KA-05 | O: błędne pozycje, klient i produkt | Uzgodnione wyjątki, brak częściowego zapisu | Błędne ilości, duplikaty, brak pozycji i ID odrzucone | K2-R2/O | ZALICZONE |
+| US-01-007-KA-06 | O: zapis i edycja; próba BigInteger | Dokładna kwota do grosza i odrzucenie przekroczenia limitu | 35,04 → 35,06; limit przechodzi, limit + 0,01 i przekroczenie przez mnożenie odrzucone bez zmian | K2-R2/O; K2-R4 | ZALICZONE |
+| US-01-007-KA-07 | O: zapis i edycja przy stanie 7 | Stan produktu bez zmian | Po operacjach nadal 7 | K2-R2/O | ZALICZONE |
+| US-01-007-KA-08 | O: zamówienie na fakturze i zwolnienie | Edycja zablokowana do zwolnienia | ArgumentException, potem poprawna edycja | K2-R2/O | ZALICZONE |
+| US-01-008-KA-01 | Inspekcja Sales i schematu | Invoice i relacja Order.Invoice | Encja oraz relacja obecne | K2-R2/D; K2-R5 | ZALICZONE |
+| US-01-008-KA-02 | I: faktura dla dwóch zamówień | Oba zamówienia powiązane | VM i nowy kontekst potwierdzają powiązania | K2-R2/I | ZALICZONE |
+| US-01-008-KA-03 | Inspekcja kontraktu i VM | Interfejs, BaseService i VM | Struktura zgodna, testy wywołują interfejs | K2-R2/I; K2-R5 | ZALICZONE |
+| US-01-008-KA-04 | I, C: numer, data i duplikat | Zapis danych; duplikat numeru odrzucony | Dane zachowane, odpowiedni wyjątek bez zmian | K2-R2/I,C | ZALICZONE |
+| US-01-008-KA-05 | I: zestawy zamówień | Co najmniej jedno, wspólny klient, brak podwójnej faktury | Poprawny zestaw zapisany; błędne zestawy odrzucone | K2-R2/I | ZALICZONE |
+| US-01-008-KA-06 | I: suma i edycja; próba BigInteger | Dokładna suma zapisanych kwot, nie większa niż limit | 55,05 i 20,01 w VM/SQL; limit zachowany, nadwyżka o grosz odrzucona | K2-R2/I; K2-R4 | ZALICZONE |
+| US-01-008-KA-07 | I: zmiana zestawu, obca faktura, błąd SQL | Zastąpienie zestawu albo zachowanie starego po błędzie | Zwolnienie/przypisanie poprawne, rollback potwierdzony | K2-R2/I | ZALICZONE |
+| US-01-009-KA-01 | D, M: migracje na nowych i istniejących bazach | Poprawne zastosowanie migracji SQL | Obie migracje zastosowane; aktualizacja starych danych zachowuje wartości i relacje | K2-R2/D,M | ZALICZONE |
+| US-01-009-KA-02 | D: model EF i sys.foreign_keys | Osiem relacji 1:M i N:M przez OrderProduct | Wszystkie FK i złożony klucz potwierdzone | K2-R2/D | ZALICZONE |
+| US-01-009-KA-03 | D: tabele i odczyt podtypów | Wspólna tabela i zachowane typy TPH | AspNetUsers i trzy podtypy potwierdzone | K2-R2/D | ZALICZONE |
+| US-01-009-KA-04 | P, O, I, D, M: odczyty w nowych kontekstach | Zachowane wartości i powiązania | Dopuszczalne ceny i kwoty identyczne w VM i SQL; relacje zachowane | K2-R2/P,O,I,D,M | ZALICZONE |
+| US-01-009-KA-05 | A, O, I, D: opcjonalność i właściciele | Dopuszczone null; jeden właściciel adresu i sklep pracownika | Scenariusze usług oraz ograniczenia SQL zgodne | K2-R2/A,O,I,D | ZALICZONE |
+| US-01-009-KA-06 | D, P: ujemny/zerowy stan i suma | Ujemny odrzucony, zero dopuszczone, suma poprawna | Oczekiwane zachowanie SQL i VM | K2-R2/D,P | ZALICZONE |
+| US-01-010-KA-01 | Niezależne wykonanie całego zestawu K2 | Testy pięciu usług i rzeczywiste wyniki | 100/100, 0 błędów, 0 pominięć | K2-R2 | ZALICZONE |
+| US-01-010-KA-02 | Inspekcja i wykonanie P, C | Odczyty, zapis, filtry i uzgodnione błędy produktu | Poprzednie scenariusze oraz nowe przypadki precyzji i limitu przechodzą | K2-R2/P,C; K2-R5 | ZALICZONE |
+| US-01-010-KA-03 | Inspekcja i wykonanie A, S, O, I, C | Operacje pozostałych usług i błędne przypadki | Zapis, odczyty i operacje powiązań pokryte | K2-R2/A,S,O,I,C; K2-R5 | ZALICZONE |
+| US-01-010-KA-04 | Inspekcja fixture oraz P | Izolacja i porównanie z danymi wejściowymi | Losowa baza, reset przed każdym testem, jawny zestaw dwóch ID | K2-R2/P; K2-R5 | ZALICZONE |
+| US-01-010-KA-05 | DI, asercje VM/SQL, powtórzenie regresji BUG-01-001 | Poprawne przejście danych i brak pominiętych kontroli | DI działa; dane w VM i SQL zgodne; nadmierna precyzja odrzucona przed zapisem | K2-R2; K2-R5 | ZALICZONE |
+| US-01-010-KA-06 | C i helper Rejected, testy powiązań | Kontrakty pięciu usług i brak częściowego zapisu | Testy kontraktów i porównań stanu przechodzą | K2-R2/C,A,S,I | ZALICZONE |
+| US-01-010-KA-07 | P, O, I, M i porównanie BigInteger | Regresja precyzji, granic, kwot 35,04 i 55,05 oraz atomowości | Wszystkie nowe scenariusze SQL przechodzą; niezależna arytmetyka bez rozbieżności | K2-R2/P,O,I,M; K2-R4 | ZALICZONE |
+| WU-01 | C i scenariusze cen P | Kontrakty pięciu usług i zgodne dane zapisu/odczytu | Kontrakty zachowane, rozbieżność ceny z K1 usunięta | K2-R2/C,P | ZALICZONE |
+| WU-02 | C dla pięciu usług | Zachowanie ID zgodne z kontraktem | null/0 dodaje, dodatnie aktualizuje, błędne ID odrzucone | K2-R2/C | ZALICZONE |
+| WU-03 | C, inspekcja odczytów | Pierwszy pasujący lub null; właściwe listy | Filtry i puste wyniki zgodne, użyte FirstOrDefault | K2-R2/C; K2-R5 | ZALICZONE |
+| WU-04 | C i testy operacji powiązań | Null obowiązkowego wejścia odrzucony | ArgumentNullException i log dla każdej usługi | K2-R2/C,A,S | ZALICZONE |
+| WU-05 | Przypadki błędne wszystkich usług i granice kwot | Właściwe wyjątki, dwie cyfry ułamkowe, limit P11 | ArgumentException dla nadmiernej precyzji i wartości; pozostałe wyjątki kontraktu poprawne | K2-R2/P,O,I,A,S,C; K2-R4 | ZALICZONE |
+| WU-06 | Rejected oraz wymuszony błąd SQL | Brak częściowego zapisu lub zmiany powiązań | Porównania stanu przechodzą również przy przekroczeniu kwot na dodaniu i edycji | K2-R2 | ZALICZONE |
+| WU-07 | Inspekcja i testy DI, mappera, loggera | Wymagane zależności, wyniki i błędy dostępne wywołującemu | Zależności poprawne, wyjątki przekazywane i logowane | K2-R2; K2-R5 | ZALICZONE |
 
-Razem: **68 kryteriów US3, 63 ZALICZONE, 5 NIEZALICZONE, 0 NIEZWERYFIKOWANE**. Pięć niezaliczonych kryteriów wynika z tej samej usterki; wynik nie oznacza pięciu niezależnych błędów. Nowa reguła dwóch miejsc po przecinku nie została zastosowana wstecz jako warunek oceny K1.
+Razem: **70/70 kryteriów ZALICZONE, 0 NIEZALICZONE, 0 NIEZWERYFIKOWANE**. BUG-01-001 zamknięta po niezależnym sprawdzeniu K2. Brak otwartych usterek i blokad uzgodnionego zakresu; sprint 01 zakończony.
 
 ### BUG-01-001 — cena zwrócona przez usługę różni się od utrwalonej
 
-- **Priorytet:** P2. **Stan:** niepoprawiona w ocenionej K1; poprawka K2 potwierdzona przez programistę i oczekuje na recenzję. Usterka nie jest jeszcze zamknięta przez recenzenta.
+- **Priorytet:** P2. **Stan: ZAMKNIĘTA w K2**, 2026-10-24. Niezależne K2-R2/P potwierdza zgodność dopuszczalnej ceny w wejściu, VM i SQL oraz ArgumentException bez zapisu dla pierwotnych przypadków błędu; K2-R4 potwierdza walidację i dokładność obliczeń. Poniższe kroki dokumentują usterkę historycznej K1.
 - **Kryteria:** US-01-003-KA-01 i KA-02, US-01-009-KA-04, WU-01; luka w weryfikacji US-01-010-KA-05.
 - **Wpływ:** wywołujący otrzymuje potwierdzenie ceny innej niż późniejszy odczyt. Zmiana jest cicha; kolejne operacje korzystają z ceny z bazy.
 - **Warunki:** K1, rzeczywista baza SQL Server po migracji, istniejące Supplier i Category, pozostałe pola produktu poprawne.
@@ -563,10 +589,10 @@ Razem: **68 kryteriów US3, 63 ZALICZONE, 5 NIEZALICZONE, 0 NIEZWERYFIKOWANE**. 
 - **Rzeczywiste:** po dodaniu VM ma `1.123456789`, baza `1.12345679`; po aktualizacji VM ma `1.987654321`, baza `1.98765432`. Odczyt nowym kontekstem potwierdza utratę precyzji. Dodatkowo `0.000000001m` dochodzi do SQL i kończy się `DbUpdateException` z ograniczenia dodatniej ceny; nie zapisuje nowego produktu.
 - **Przyczyna:** [ApplicationDbContext.cs](../WebStore.DAL/EF/ApplicationDbContext.cs), linia 56, ogranicza cenę do SQL `decimal(28,8)`. [ProductService.cs](../WebStore.Services/ConcreteServices/ProductService.cs), linie 32–33, po `SaveChanges` mapuje obiekt zachowujący wartość wejściową. Pola kwot zamówień i faktur mają taką samą skalę w konfiguracji EF (linie 57–58).
 - **Dowód:** R4. Próba została wykonana w odrębnej bazie, usuniętej po zakończeniu.
-- **Przekazanie:** po recenzji przyjęto US4 i uzupełnienie P11, a programista przygotował K2. Następny krok to akceptacja K2 przez lidera i niezależna ponowna recenzja. Historyczne wyniki K1 pozostają zapisane powyżej.
+- **Zamknięcie:** lider przyjął US4 i uzupełnienie P11, następnie zaakceptował K2. Recenzent potwierdził naprawę i regresję; nie ma dalszych poprawek tej usterki. Historyczne wyniki K1 pozostają zapisane powyżej.
 
 ## Jak rozpocząć / jak kontynuować
 
 Aby uruchomić aplikację, wykonaj polecenia z [README.md](../README.md). Lider nie musi tworzyć żadnego pliku, folderu ani gałęzi w repozytorium.
 
-K2 jest gotowa. Aby rozpocząć recenzję, napisz: **„Akceptuję K2 (commit 47e0afb) dla sprintu 01.”** Recenzent zweryfikuje poprawkę BUG-01-001 i aktualny zakres US4 z przyjętym P11, zapisany jako US5. Akceptacja K1 nie obejmuje tej zmiany kodu.
+Sprint 01 jest zakończony: K2 zaakceptowana, recenzja pozytywna, BUG-01-001 zamknięta. Aby rozpocząć kolejny sprint, dodaj jego PDF do folderu `wymagania funkcjonalne/`, a w czacie poleć rozpoczęcie pracy analityka, wskazując numer sprintu i dokładną nazwę dokumentu. Nie rozpoczynamy kolejnej iteracji automatycznie.
