@@ -7,6 +7,44 @@ namespace WebStore.Tests;
 public class InvoiceTests(SqlDatabase database) : ServiceTest(database)
 {
     [Fact]
+    public void Invoice_rejects_amount_above_limit_on_add_and_update_without_any_write()
+    {
+        var maximum = Product(792281625142643375935439503.35m);
+        var oneGrosz = Product(0.01m);
+        var a = Order(maximum.Id); var b = Order(oneGrosz.Id);
+        var input = InvoiceInput("FV/limit", a.Id, b.Id);
+        Rejected<ArgumentException>(() => Invoices.AddOrUpdateInvoice(input));
+        var existing = Invoices.AddOrUpdateInvoice(InvoiceInput("FV/limit", a.Id));
+        Assert.Equal(792281625142643375935439503.35m, existing.Amount);
+        using (var db = Database.Open())
+            Assert.Equal(existing.Amount, db.Invoices.Single().Amount);
+        input.Id = existing.Id;
+        Rejected<ArgumentException>(() => Invoices.AddOrUpdateInvoice(input));
+        Assert.Null(Orders.GetOrder(o => o.Id == b.Id)!.InvoiceId);
+    }
+
+    [Fact]
+    public void Invoice_amount_keeps_exact_grosz_on_save_update_and_fresh_sql_read()
+    {
+        var p = Product(10.01m); var q = Product(15.02m); var r = Product(20.01m);
+        var a = Orders.AddOrUpdateOrder(OrderInput(new(p.Id, 2), new(q.Id, 1)));
+        var b = Order(r.Id);
+        var input = InvoiceInput("FV/grosze", a.Id, b.Id);
+        var created = Invoices.AddOrUpdateInvoice(input);
+        Assert.Equal(55.05m, created.Amount);
+        Assert.Equal(55.05m, Invoices.GetInvoice(i => i.Id == created.Id)!.Amount);
+        using (var db = Database.Open())
+            Assert.Equal(55.05m, db.Invoices.Single(i => i.Id == created.Id).Amount);
+
+        input.Id = created.Id; input.OrderIds = [b.Id];
+        Assert.Equal(20.01m, Invoices.AddOrUpdateInvoice(input).Amount);
+        Assert.Equal(20.01m, Invoices.GetInvoice(i => i.Id == created.Id)!.Amount);
+        using (var db = Database.Open())
+            Assert.Equal(20.01m, db.Invoices.Single(i => i.Id == created.Id).Amount);
+        Assert.Null(Orders.GetOrder(o => o.Id == a.Id)!.InvoiceId);
+    }
+
+    [Fact]
     public void Invoice_sums_saved_totals_and_update_replaces_order_set()
     {
         var p = Product(); var q = Product(15m);

@@ -9,6 +9,51 @@ namespace WebStore.Tests;
 public class OrderTests(SqlDatabase database) : ServiceTest(database)
 {
     [Fact]
+    public void Order_rejects_amount_above_limit_on_add_and_update_without_any_write()
+    {
+        var maximum = Product(792281625142643375935439503.35m);
+        var oneGrosz = Product(0.01m);
+        var existing = Order(maximum.Id);
+        Assert.Equal(792281625142643375935439503.35m, existing.TotalAmount);
+        using (var db = Database.Open())
+            Assert.Equal(existing.TotalAmount, db.Orders.Single().TotalAmount);
+
+        // Przekroczenie o jeden grosz oraz przez mnożenie muszą być odrzucone.
+        foreach (var lines in new[]
+        {
+            new[] { new OrderLineVm(maximum.Id, 1), new OrderLineVm(oneGrosz.Id, 1) },
+            new[] { new OrderLineVm(maximum.Id, 2) }
+        })
+        {
+            var input = OrderInput(lines);
+            Rejected<ArgumentException>(() => Orders.AddOrUpdateOrder(input));
+            input.Id = existing.Id;
+            Rejected<ArgumentException>(() => Orders.AddOrUpdateOrder(input));
+        }
+    }
+
+    [Fact]
+    public void Order_amount_keeps_exact_grosz_on_save_update_and_fresh_sql_read()
+    {
+        var p = Product(10.01m); var q = Product(15.02m);
+        var input = OrderInput(new(p.Id, 2), new(q.Id, 1));
+        var created = Orders.AddOrUpdateOrder(input);
+        Assert.Equal(35.04m, created.TotalAmount);
+        Assert.Equal(35.04m, Orders.GetOrder(o => o.Id == created.Id)!.TotalAmount);
+        using (var db = Database.Open())
+            Assert.Equal(35.04m, db.Orders.Single(o => o.Id == created.Id).TotalAmount);
+
+        var price = ProductInput(p.Id); price.Price = 10.02m;
+        Products.AddOrUpdateProduct(price);
+        Assert.Equal(35.04m, Orders.GetOrder(o => o.Id == created.Id)!.TotalAmount);
+        input.Id = created.Id;
+        Assert.Equal(35.06m, Orders.AddOrUpdateOrder(input).TotalAmount);
+        Assert.Equal(35.06m, Orders.GetOrder(o => o.Id == created.Id)!.TotalAmount);
+        using (var db = Database.Open())
+            Assert.Equal(35.06m, db.Orders.Single(o => o.Id == created.Id).TotalAmount);
+    }
+
+    [Fact]
     public void Totals_use_prices_at_save_edit_recalculates_and_stock_does_not_change()
     {
         var p = Product(); var q = Product(15m, "Herbata");

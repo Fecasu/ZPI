@@ -40,6 +40,8 @@ Otwórz [localhost:5100](http://localhost:5100). Zatrzymanie serwera: `Ctrl+C` w
 
 Domyślne połączenie korzysta z uwierzytelniania Windows i bazy `ZpiWebStore`. Migracja tworzy schemat; baza aplikacji nie jest wypełniana fikcyjnymi produktami. Dane demonstracyjne istnieją wyłącznie w testach. Uruchomienie serwera nie wykonuje automatycznych migracji.
 
+Po aktualizacji z K1 zbuduj projekt i ponów `dotnet ef database update --project WebStore.DAL --startup-project WebStore.DAL --no-build`. Nowa migracja `MoneyPrecision` zmienia cenę produktu oraz kwoty zamówień i faktur na zapis z dwoma miejscami po przecinku. Przed zmianą sprawdza istniejące dane: jeśli którakolwiek wartość wymaga większej precyzji, przerywa operację komunikatem SQL 51001 i pozostawia dane oraz schemat bez zmian. W takiej sytuacji trzeba uzgodnić korektę konkretnych danych z liderem i ponowić migrację; migracja nie zaokrągla ani nie usuwa danych.
+
 Opcjonalna konfiguracja innego połączenia, odczytywana zarówno przez host, jak i narzędzie migracji:
 
 ```powershell
@@ -69,7 +71,7 @@ Zestaw obejmuje pięć usług, walidację i logowanie błędów, brak częściow
 | Projekt | Odpowiedzialność |
 | --- | --- |
 | `WebStore.Model` | Encje sklepu i użytkownicy dziedziczący po `IdentityUser<int>`. |
-| `WebStore.DAL` | `ApplicationDbContext`, konfiguracja SQL Server i migracja `InitialCreate`. |
+| `WebStore.DAL` | `ApplicationDbContext`, konfiguracja SQL Server oraz migracje `InitialCreate` i `MoneyPrecision`. |
 | `WebStore.ViewModels` | Wejściowe i wynikowe VM. |
 | `WebStore.Services` | Interfejsy, implementacje pięciu usług, `StoreMapper` i rejestracja DI. |
 | `WebStore.Web` | Host ASP.NET Core i klient React w `ClientApp`. Vite buduje pliki do `wwwroot`. |
@@ -88,7 +90,7 @@ Usługi rejestruje `services.AddWebStore(connectionString)`. Pobieraj interfejsy
 
 Każdy zapis jest odrębną transakcją `Serializable`, obejmującą walidację powiązań i zapis. Kontekst przekazany usłudze nie może zawierać niezapisanych zmian innych operacji. Usługa zapisuje własne zmiany oraz czyści śledzenie po sukcesie lub błędzie; po błędzie SQL transakcja jest wycofywana. Nie używaj jednego zakresu DI równolegle. Błędy infrastruktury są logowane i przekazywane wywołującemu.
 
-Mapowanie jest jawne i typowane w `StoreMapper`, bez zależności od historycznej wersji biblioteki z PDF. Kwoty są przechowywane jako SQL `decimal(28,8)`, masa jako `real` zgodnie z modelem `float`; waluta to PLN, jednostka masy to kg. Suma stanów w VM używa `long`, aby sumowanie wielu rekordów `int` nie przepełniało wyniku. Unikalny indeks skrótu numeru faktury pozwala uniknąć narzucania biznesowego limitu długości numeru.
+Mapowanie jest jawne i typowane w `StoreMapper`, bez zależności od historycznej wersji biblioteki z PDF. Cena oraz kwoty zamówień i faktur są przechowywane jako SQL `decimal(31,2)`. Waluta to PLN; wartości wymagające więcej niż dwóch miejsc po przecinku, np. `1,234`, są odrzucane przez usługę produktów jako `ArgumentException` przed zapisem, również podczas aktualizacji. `1,2300` i `1,23` oznaczają tę samą dopuszczalną wartość. Przyjęte w P11 maksimum ceny i kwoty wynosi `792281625142643375935439503,35 PLN`; cena musi być dodatnia. Obliczenia zamówień i faktur odbywają się w całkowitych groszach. Przekroczenie maksimum ceny, iloczynu lub sumy powoduje `ArgumentException` bez zapisu, także przy aktualizacji. Masa jest przechowywana jako `real` zgodnie z modelem `float`, w kilogramach. Suma stanów w VM używa `long`, aby sumowanie wielu rekordów `int` nie przepełniało wyniku. Unikalny indeks skrótu numeru faktury pozwala uniknąć narzucania biznesowego limitu długości numeru.
 
 ## Praca sekwencyjna
 

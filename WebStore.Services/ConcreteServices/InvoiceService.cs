@@ -33,7 +33,7 @@ public class InvoiceService(ApplicationDbContext context, StoreMapper mapper, IL
             throw new ArgumentException("Zamówienia muszą należeć do jednego klienta.");
         if (orders.Any(o => o.InvoiceId.HasValue && o.InvoiceId != invoice.Id))
             throw new ArgumentException("Zamówienie należy do innej faktury.");
-        var amount = orders.Sum(o => o.TotalAmount);
+        var amount = Pln.Total(orders.Select(o => (o.TotalAmount, 1)));
         Mapper.Apply(model, invoice);
         invoice.Amount = amount;
         invoice.Orders.Clear();

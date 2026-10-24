@@ -25,6 +25,7 @@ public class ProductService(ApplicationDbContext context, StoreMapper mapper, IL
         RequiredText(model.Description, nameof(model.Description));
         if (model.ImageBytes is null || model.ImageBytes.Length == 0 || model.Price <= 0 || model.Weight <= 0 || !float.IsFinite(model.Weight))
             throw new ArgumentException("Wymagany obraz oraz dodatnia cena i masa.");
+        Pln.Validate(model.Price, nameof(model.Price));
         if (!Context.Categories.Any(c => c.Id == model.CategoryId)) throw new KeyNotFoundException("Nie znaleziono kategorii.");
         RequiredUser<Supplier>(model.SupplierId);
         Mapper.Apply(model, product);

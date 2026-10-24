@@ -31,7 +31,7 @@ public class OrderService(ApplicationDbContext context, StoreMapper mapper, ILog
         var ids = model.Products.Select(p => p.ProductId).ToArray();
         var products = Context.Products.Where(p => ids.Contains(p.Id)).ToDictionary(p => p.Id);
         if (products.Count != ids.Length) throw new KeyNotFoundException("Nie znaleziono produktu zamówienia.");
-        var total = model.Products.Sum(p => products[p.ProductId].Price * p.Quantity);
+        var total = Pln.Total(model.Products.Select(p => (products[p.ProductId].Price, p.Quantity)));
         Mapper.Apply(model, order);
         order.TotalAmount = total;
         foreach (var removed in order.OrderProducts.Where(p => !ids.Contains(p.ProductId)).ToArray())

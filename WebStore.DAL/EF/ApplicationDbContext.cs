@@ -53,9 +53,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasForeignKey(x => x.OrderId).OnDelete(DeleteBehavior.Cascade);
         b.Entity<OrderProduct>().HasOne(x => x.Product).WithMany(x => x.OrderProducts)
             .HasForeignKey(x => x.ProductId).OnDelete(DeleteBehavior.NoAction);
-        b.Entity<Product>().Property(x => x.Price).HasPrecision(28, 8);
-        b.Entity<Order>().Property(x => x.TotalAmount).HasPrecision(28, 8);
-        b.Entity<Invoice>().Property(x => x.Amount).HasPrecision(28, 8);
+        b.Entity<Product>().Property(x => x.Price).HasPrecision(31, 2);
+        b.Entity<Order>().Property(x => x.TotalAmount).HasPrecision(31, 2);
+        b.Entity<Invoice>().Property(x => x.Amount).HasPrecision(31, 2);
         b.Entity<Address>().ToTable(t => t.HasCheckConstraint("CK_Address_OneOwner",
             "([CustomerId] IS NOT NULL AND [StationaryStoreId] IS NULL) OR ([CustomerId] IS NULL AND [StationaryStoreId] IS NOT NULL)"));
         b.Entity<ProductStock>().ToTable(t => t.HasCheckConstraint("CK_Stock_Quantity", "[Quantity] >= 0"));

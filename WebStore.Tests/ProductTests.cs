@@ -7,6 +7,58 @@ namespace WebStore.Tests;
 [Collection("SQL")]
 public class ProductTests(SqlDatabase database) : ServiceTest(database)
 {
+    public static TheoryData<decimal> ValidPrices => new()
+    {
+        0.01m, 1.2m, 1.23m, 1.2300m, 792281625142643375935439503.35m
+    };
+
+    [Theory, MemberData(nameof(ValidPrices))]
+    public void Price_is_preserved_on_add_update_and_fresh_sql_read(decimal price)
+    {
+        var input = ProductInput();
+        input.Price = price;
+        var created = Products.AddOrUpdateProduct(input);
+        Assert.Equal(price, created.Price);
+        Assert.Equal(price, Products.GetProduct(p => p.Id == created.Id)!.Price);
+        using (var db = Database.Open())
+            Assert.Equal(price, db.Products.Single(p => p.Id == created.Id).Price);
+
+        var existing = Product(2m);
+        input.Id = existing.Id;
+        var updated = Products.AddOrUpdateProduct(input);
+        Assert.Equal(existing.Id, updated.Id);
+        Assert.Equal(price, updated.Price);
+        Assert.Equal(price, Products.GetProduct(p => p.Id == existing.Id)!.Price);
+        using (var db = Database.Open())
+        {
+            Assert.Equal(price, db.Products.Single(p => p.Id == existing.Id).Price);
+            Assert.Equal(2, db.Products.Count());
+        }
+    }
+
+    public static TheoryData<decimal> InvalidPrices => new()
+    {
+        1.234m, 1.123456789m, 1.987654321m, 0.000000001m,
+        792281625142643375935439503.4m, decimal.MaxValue
+    };
+
+    [Theory, MemberData(nameof(InvalidPrices))]
+    public void Invalid_price_precision_or_range_is_rejected_on_add_and_update_without_any_write(decimal price)
+    {
+        var existing = Product(1.23m);
+        Db.ProductStocks.Add(new ProductStock { ProductId = existing.Id, Quantity = 3 });
+        Db.SaveChanges(); Db.ChangeTracker.Clear();
+        var input = ProductInput(name: "Odrzucona zmiana");
+        input.Price = price;
+        Rejected<ArgumentException>(() => Products.AddOrUpdateProduct(input));
+        input.Id = 0;
+        Rejected<ArgumentException>(() => Products.AddOrUpdateProduct(input));
+        input.Id = existing.Id;
+        Rejected<ArgumentException>(() => Products.AddOrUpdateProduct(input));
+        Assert.Equal(1.23m, Products.GetProduct(p => p.Id == existing.Id)!.Price);
+        Assert.Single(Products.GetProducts());
+    }
+
     [Fact]
     public void Product_roundtrip_preserves_all_fields_and_relations()
     {

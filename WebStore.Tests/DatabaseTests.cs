@@ -11,9 +11,18 @@ public class DatabaseTests(SqlDatabase database) : ServiceTest(database)
     public void Migration_is_applied_and_sql_schema_has_required_foreign_keys_and_tph()
     {
         using var db = Database.Open();
-        Assert.Single(db.Database.GetAppliedMigrations());
+        Assert.Equal(db.Database.GetMigrations(), db.Database.GetAppliedMigrations());
         Assert.Empty(db.Database.GetPendingMigrations());
         Assert.False(db.Database.HasPendingModelChanges());
+        var moneyColumns = db.Database.SqlQueryRaw<string>("""
+            SELECT OBJECT_NAME(object_id) + '.' + name + ':'
+                + CAST(precision AS varchar(2)) + ',' + CAST(scale AS varchar(2)) AS Value
+            FROM sys.columns
+            WHERE (object_id = OBJECT_ID('Products') AND name = 'Price')
+               OR (object_id = OBJECT_ID('Orders') AND name = 'TotalAmount')
+               OR (object_id = OBJECT_ID('Invoices') AND name = 'Amount')
+            """).ToArray();
+        Assert.Equal(new[] { "Invoices.Amount:31,2", "Orders.TotalAmount:31,2", "Products.Price:31,2" }, moneyColumns.Order());
         var expected = new[]
         {
             (typeof(Order), nameof(WebStore.Model.DataModels.Order.CustomerId), typeof(Customer)),
