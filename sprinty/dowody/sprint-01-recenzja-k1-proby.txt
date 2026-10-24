@@ -1,0 +1,7 @@
+Migracja do nowej bazy recenzji: OK
+Dodanie: wejscie=1.123456789; wynik VM=1.123456789; ponowny odczyt=1.12345679
+Nowy kontekst: cena=1.12345679
+Aktualizacja: wejscie=1.987654321; wynik VM=1.987654321; ponowny odczyt=1.98765432
+Cena 0.000000001: DbUpdateException; przyczyna=The INSERT statement conflicted with the CHECK constraint "CK_Product_PriceWeight". The conflict occurred in database "ZpiWebStoreReview_11b99064b40c4a4899c7bf0d6d105bf5", table "dbo.Products".
+Liczba produktow po probie odrzuconego zapisu: 1
+Usuniecie wlasnej bazy recenzji: OK
