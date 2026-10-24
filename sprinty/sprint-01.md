@@ -348,6 +348,8 @@ Brak.
 
 Repozytorium: [Fecasu/ZPI, main](https://github.com/Fecasu/ZPI/tree/main). Zdalny commit początkowy `182b88d999c5af4548e5e57c2193c7d6ea8c148c` nie zawierał plików; jego historia została zachowana. Przed przygotowaniem K1 ponownie pobrano `origin/main` i potwierdzono brak nowych zmian. Autor Git został skonfigurowany lokalnie według danych podanych przez lidera w czacie.
 
+**Stan publikacji:** K1 i karta sprintu zostały wysłane na `main`. `git ls-remote origin refs/heads/main` potwierdziło zdalny commit `a75be4aaade30b976e588edeebf6d4d0e79a98ef`, obejmujący K1 oraz kartę sprintu. Końcowa aktualizacja dokumentacyjna zapisuje ten wynik bez zmian kodu i testów.
+
 ### Dostarczone rozwiązanie
 
 - .NET 10, EF Core i Identity 10.0.13; SDK użyte do weryfikacji: 10.0.401.
@@ -390,6 +392,7 @@ Pełne polecenia odtworzenia i konfiguracja bez sekretów: [README.md](../README
 | `dotnet run --project WebStore.Web --no-build --no-restore` | Host nasłuchuje na `http://localhost:5100`. |
 | Przeglądarka pod adresem hosta | Wyrenderowana strona React, tytuł „WebStore · ZPI”, polski nagłówek i opis; [zrzut ekranu](dowody/sprint-01-web.png). |
 | `git diff --cached --check` | Brak błędów białych znaków przed commitem K1. |
+| `git push origin main` i `git ls-remote origin refs/heads/main` | Publikacja zakończona sukcesem; zdalna historia zawiera commit kodu K1 i kartę sprintu. |
 
 **Znane usterki i blokady:** brak w sprawdzonym zakresie. To wyniki testów własnych programisty; nie stanowią akceptacji lidera ani werdyktu recenzenta. Recenzja nie została rozpoczęta.
 
@@ -397,4 +400,4 @@ Pełne polecenia odtworzenia i konfiguracja bez sekretów: [README.md](../README
 
 Aby uruchomić aplikację, wykonaj polecenia z [README.md](../README.md). Lider nie musi tworzyć żadnego pliku, folderu ani gałęzi w repozytorium.
 
-Aby przejść do recenzji, po obejrzeniu K1 lider może napisać: „Akceptuję K1 (commit 8108edc) dla sprintu 01”. To wzór kolejnej decyzji, nie zapis akceptacji kodu. Agent zapisze faktyczną decyzję i dopiero wtedy rozpocznie rolę recenzenta. Uwagi do K1 uruchamiają etap poprawek.
+Po obejrzeniu opublikowanej K1 lider może napisać: „Akceptuję K1 (commit 8108edc) dla sprintu 01”. To wzór kolejnej decyzji, nie zapis akceptacji kodu. Agent zapisze faktyczną decyzję i dopiero wtedy rozpocznie rolę recenzenta. Uwagi do K1 uruchamiają etap poprawek.
