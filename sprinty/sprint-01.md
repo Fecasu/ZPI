@@ -5,20 +5,20 @@
 | Pole | Wartość |
 | --- | --- |
 | Data rozpoczęcia i aktualizacji | 2026-10-24, Europe/Warsaw |
-| Etap | `CZEKA_NA_AKCEPTACJE_STORIES` |
-| Aktywna rola | Analityk: US4 przygotowana do decyzji lidera po recenzji K1 |
-| Rewizja stories | `US4` — zmieniony zakres oczekuje na akceptację; poprzednia zaakceptowana rewizja to US3 |
-| Rewizja kodu | `K1` — commit `8108edc7299bc424649a72110e9a5d648c49efba` |
-| Akceptacja stories | US3 z 2026-10-24; nie obejmuje nowych ani zmienionych kryteriów US4 |
-| Akceptacja kodu | K1, commit `8108edc`; decyzja lidera z 2026-10-24 |
-| Blokada | BUG-01-001 otwarta; brak akceptacji US4 w zmienionym zakresie |
-| Następny krok | Lider akceptuje US4; programista przygotowuje poprawkę K2 i przekazuje ją do osobnej akceptacji kodu |
+| Etap | `CZEKA_NA_AKCEPTACJE_KODU` |
+| Aktywna rola | Programista fullstack: K2 gotowa; oczekiwanie na decyzję lidera |
+| Rewizja stories | `US5` — scalona zaakceptowana US4 i reguła limitu P11 przyjęta przez lidera |
+| Rewizja kodu | `K2` — commit `47e0afb08c99162d7e1b143f970535801d0fcbdf` |
+| Akceptacja stories | US4: US-01-003, US-01-007, US-01-008, US-01-010 i WU-05; następnie jednoznacznie przyjęty limit P11 dla tego samego zakresu |
+| Akceptacja kodu | Historyczna K1, commit `8108edc`; K2 wymaga osobnej akceptacji |
+| Blokada | Oczekiwanie na akceptację kodu K2; BUG-01-001 pozostaje do potwierdzenia przez recenzenta |
+| Następny krok | Lider akceptuje K2 (47e0afb); recenzent weryfikuje poprawkę i aktualny zakres |
 
 **Cel:** dostarczyć podstawę sklepu WebStore: uruchamialną solucję .NET 10 z React, model danych, trwałą bazę SQL Server, autonomiczne usługi biznesowe i testy.
 
 **Zakres uzgodniony z liderem:** model, baza, usługi i testy oraz uruchamialny szkielet webowy. Funkcjonalne ekrany sklepu i API HTTP udostępniające usługi biznesowe nie należą do zakresu sprintu 01. Szkielet ma się uruchamiać i wyświetlać stronę React; kryteria usług będą sprawdzane bezpośrednio przez ich kontrakty i testy.
 
-**Status analizy:** odczytano wszystkie 21 stron PDF i diagram UML na stronie 12. Lider przyjął reguły P03–P08, repozytorium, wymagania narzędziowe oraz całą rewizję US3 z gałęzią `main`. Po recenzji K1 doprecyzował regułę precyzji cen i kwot (D12/P10). Analityk przygotował US4; zmienione kryteria oczekują na akceptację. Pozostały zakres pozostaje zgodny z US3.
+**Status analizy:** odczytano wszystkie 21 stron PDF i diagram UML na stronie 12. Lider przyjął reguły P03–P08, repozytorium, wymagania narzędziowe oraz całą rewizję US3 z gałęzią `main`. Po recenzji K1 zaakceptował US4 z precyzją dwóch miejsc po przecinku, a następnie konkretny limit kwot P11. Scalony zakres to US5. Pozostałe wymagania pozostają zgodne z US3.
 
 **Przekazanie kodu:** gotowe rozwiązanie, migracje, testy i instrukcja uruchomienia trafiają do [Fecasu/ZPI](https://github.com/Fecasu/ZPI), na zatwierdzoną gałąź `main`. Programista przygotowuje Git z zachowaniem historii i istniejących plików. Lider nie musi tworzyć plików, katalogów ani gałęzi przez interfejs GitHuba. Akceptacja kodu przed recenzją pozostaje odrębnym etapem.
 
@@ -49,6 +49,7 @@
 | D10 / P09 | Rozszerzenia VS Code opisane w PDF nie są warunkiem odbioru; wymagane są działające rozwiązanie, migracje i testy. | Odpowiedź: „Wystarczy działające rozwiązanie, migracje i testy”. |
 | D11 / P09 | Gałąź docelowa: `main` w `Fecasu/ZPI`. | Lider zaakceptował US3 oraz main; pełny zapis poniżej. |
 | D12 / P10 | Ceny i kwoty w PLN mają maksymalnie dwa miejsca po przecinku. Większa precyzja jest odrzucana jako `ArgumentException` bez zapisu; nie stosuje się cichego zaokrąglania. | Odpowiedź lidera: „Maksymalnie 2 miejsca po przecinku; większą precyzję odrzucaj jako ArgumentException bez zapisu (zalecane dla PLN).”. Rozstrzygnięcie pytania po wykryciu BUG-01-001; akceptacja US4 pozostaje osobną decyzją. |
+| D13 / P11 | Maksymalna cena i kwota zamówienia/faktury: `792281625142643375935439503,35 PLN`. Przekroczenie przy dodaniu albo aktualizacji powoduje `ArgumentException` bez zapisu. | Lider przyjął konkretną propozycję: „Przyjmuję proponowany limit i ArgumentException bez zapisu.”. Pytanie wskazywało kwotę oraz ceny, zamówienia i faktury. Reguła uzupełnia US4; jej scalenie z dotychczasowymi kryteriami oznaczono jako US5. |
 
 Podstawa decyzji D03–D08: odpowiedź lidera projektu w czacie z 2026-10-24: „Przyjmuję propozycje P03–P08 opisane w karcie”. Dotyczy propozycji z rewizji US1. Szczegółową treść przeniesiono do aktualnych kryteriów, zachowując powiązanie z tą decyzją. Te odpowiedzi rozstrzygają pytania; nie są akceptacją rewizji stories ani kodu.
 
@@ -94,17 +95,19 @@ Diagram ze strony 12 należy czytać wraz z poleceniami rozszerzającymi go na s
 
 Ponadto: `Order` ↔ `Product` to N:M poprzez `OrderProduct`; `User`, `Customer`, `Supplier`, `StationaryStoreEmployee` mają być mapowane metodą TPH. Relacja `Invoice` → `Order` pozostaje 1:M. Zamówienie może nie mieć faktury; faktura wymaga co najmniej jednego zamówienia. Powiązania i ich zmiany podlegają D03–D08 oraz kryteriom właściwych stories.
 
-## User stories — US4 do akceptacji
+## User stories — US5: zaakceptowana US4 i przyjęta reguła P11
 
-US4 wprowadza wyłącznie doprecyzowanie D12/P10 po recenzji K1. Zakres do ponownej akceptacji: **US-01-003, US-01-007, US-01-008, US-01-010 oraz WU-05**, tylko w zmianach wskazanych poniżej. Pozostałe kryteria zachowują treść i akceptację US3. Pełna US4 zawiera 63 kryteria KA i 7 wspólnych WU; recenzja K1 poniżej ocenia wcześniejsze 61 KA i 7 WU z US3.
+US5 scala decyzje lidera bez dodawania dalszych reguł: akceptację US4 oraz przyjęcie konkretnego limitu i zachowania błędu w P11. D13 uzupełnia US-01-003-KA-08, US-01-007-KA-06, US-01-008-KA-06, US-01-010-KA-07 i WU-05. Identyfikatory i liczba kryteriów pozostają bez zmian. US3 i US4 zachowano w historii Git jako podstawy wcześniejszych etapów.
+
+Bieżący zmieniony zakres to **US-01-003, US-01-007, US-01-008, US-01-010 oraz WU-05**, według przyjętych D12/P10 i D13/P11. Pozostałe kryteria zachowują treść i akceptację US3. US5 zawiera 63 kryteria KA i 7 wspólnych WU; recenzja K1 poniżej ocenia wcześniejsze 61 KA i 7 WU z US3.
 
 | Kryterium | Zmiana względem US3 |
 | --- | --- |
-| US-01-003-KA-08 — nowe | Cena ma najwyżej dwa miejsca po przecinku; większa precyzja powoduje `ArgumentException` przy dodaniu i edycji, bez jakichkolwiek zmian danych. Dozwolona cena jest identyczna w wejściu, wyniku usługi i odczycie SQL. |
-| US-01-007-KA-06 — uzupełnione | Kwota zamówienia zachowuje dokładność do grosza przy obliczeniu, zwróceniu i utrwaleniu. |
-| US-01-008-KA-06 — uzupełnione | Kwota faktury zachowuje dokładną sumę zamówień do grosza. |
-| US-01-010-KA-07 — nowe | Testy regresji walidacji precyzji, trwałości cen oraz obliczeń kwot na rzeczywistym SQL Server. |
-| WU-05 — uzupełnione | Reguła dwóch miejsc po przecinku jest jawną walidacją z D12 i nie może być realizowana przez ciche zaokrąglanie. |
+| US-01-003-KA-08 — nowe | Cena ma najwyżej dwa miejsca po przecinku i nie przekracza limitu D13; błędna wartość powoduje `ArgumentException` przy dodaniu i edycji bez zmian danych. Dozwolona cena jest identyczna w wejściu, wyniku usługi i odczycie SQL. |
+| US-01-007-KA-06 — uzupełnione | Kwota zamówienia zachowuje dokładność do grosza przy obliczeniu, zwróceniu i utrwaleniu; przekroczenie limitu D13 jest odrzucane bez zapisu. |
+| US-01-008-KA-06 — uzupełnione | Kwota faktury zachowuje dokładną sumę zamówień do grosza; przekroczenie limitu D13 jest odrzucane bez zapisu. |
+| US-01-010-KA-07 — nowe | Testy precyzji, granic D13, trwałości cen oraz obliczeń kwot na rzeczywistym SQL Server. |
+| WU-05 — uzupełnione | Reguły D12 i D13 są jawną walidacją; niedopuszczalna wartość powoduje `ArgumentException` bez zapisu. |
 
 K2 ma usunąć BUG-01-001 w tym doprecyzowanym zakresie. Dotychczasowa akceptacja K1 nie obejmuje przyszłych zmian kodu ani testów.
 
@@ -151,7 +154,7 @@ Role biznesowe w opisach wskazują perspektywę i korzyść. Nie ustanawiają no
 
 **Opis:** Jako dostawca chcę zapisać nowy produkt i zmienić dane istniejącego, aby oferta sklepu zawierała aktualne informacje.
 
-**Źródła:** s. 12, model i rozdział 3 pkt 5; s. 14–17, `ProductVm`, `AddOrUpdateProductVm`, `IProductService`, `ProductService`; s. 20–21, testy dodania i aktualizacji; D05, D07, D08, D12.
+**Źródła:** s. 12, model i rozdział 3 pkt 5; s. 14–17, `ProductVm`, `AddOrUpdateProductVm`, `IProductService`, `ProductService`; s. 20–21, testy dodania i aktualizacji; D05, D07, D08, D12, D13.
 
 **Zakres:** metoda `AddOrUpdateProduct`, nazwa, opis, obraz, cena, masa, kategoria i dostawca; mapowanie VM ↔ encja, zapis do bazy i zwrócenie `ProductVm`.
 
@@ -164,7 +167,7 @@ Role biznesowe w opisach wskazują perspektywę i korzyść. Nie ustanawiają no
 - **US-01-003-KA-05:** Brak wymaganej nazwy, opisu lub obrazu albo cena lub masa niedodatnia powodują `ArgumentException` bez zapisu. Kategoria i dostawca muszą istnieć; ich nieistniejące identyfikatory powodują `KeyNotFoundException`. Cena jest w PLN, masa w kilogramach.
 - **US-01-003-KA-06:** Dodatnie ID nieistniejącego produktu powoduje `KeyNotFoundException`, a ujemne ID — `ArgumentException`; żaden z tych przypadków nie tworzy nowego produktu.
 - **US-01-003-KA-07:** Dane kategorii zawierają ID i niepuste `Name` oraz `Tag`. Powiązanie produktu wskazuje kategorię jako encję, a nie nazwę kategorii zapisaną w produkcie.
-- **US-01-003-KA-08:** Cena w PLN może mieć maksymalnie dwa miejsca po przecinku. Dodatnie wartości takie jak `0,01`, `1,2` i `1,23` są zapisywane bez zmiany wartości; wynik `AddOrUpdateProduct`, odczyt przez usługę i odczyt w nowym kontekście SQL zwracają tę samą cenę. Cena wymagająca większej precyzji, np. `1,234`, `1,123456789` albo `0,000000001`, powoduje `ArgumentException` zarówno przy dodaniu, jak i aktualizacji. Nie tworzy produktu ani nie zmienia żadnych dotychczasowych danych lub powiązań; nie wolno jej zaokrąglać przed zapisem. Reguła dotyczy wartości liczbowej: `1,2300` jest równe `1,23` i nie wymaga większej precyzji.
+- **US-01-003-KA-08:** Cena w PLN może mieć maksymalnie dwa miejsca po przecinku. Dodatnie wartości takie jak `0,01`, `1,2` i `1,23` są zapisywane bez zmiany wartości; wynik `AddOrUpdateProduct`, odczyt przez usługę i odczyt w nowym kontekście SQL zwracają tę samą cenę. Cena wymagająca większej precyzji, np. `1,234`, `1,123456789` albo `0,000000001`, powoduje `ArgumentException` zarówno przy dodaniu, jak i aktualizacji. Nie tworzy produktu ani nie zmienia żadnych dotychczasowych danych lub powiązań; nie wolno jej zaokrąglać przed zapisem. Reguła dotyczy wartości liczbowej: `1,2300` jest równe `1,23` i nie wymaga większej precyzji. D13 ogranicza cenę do 792281625142643375935439503,35 PLN; większa cena powoduje ArgumentException bez zapisu również przy edycji.
 
 **Zależności:** US-01-001, US-01-002, US-01-009; kategoria jest częścią modelu tej story.
 
@@ -229,7 +232,7 @@ Role biznesowe w opisach wskazują perspektywę i korzyść. Nie ustanawiają no
 
 **Opis:** Jako klient sklepu chcę mieć zapisane zamówienie z produktami i ich ilościami, aby aplikacja mogła odtworzyć zawartość mojego zamówienia.
 
-**Źródła:** s. 12, diagram `Order`, `OrderProduct`; s. 12–13, relacje klient–zamówienie i zamówienie–produkt; s. 21, `OrderService`; D05, D06, D08, D12.
+**Źródła:** s. 12, diagram `Order`, `OrderProduct`; s. 12–13, relacje klient–zamówienie i zamówienie–produkt; s. 21, `OrderService`; D05, D06, D08, D12, D13.
 
 **Zakres:** zamówienie, klient, produkty, ilości, dane terminów, kwoty i numeru przesyłki wskazane w modelu oraz autonomiczna usługa zamówień.
 
@@ -240,7 +243,7 @@ Role biznesowe w opisach wskazują perspektywę i korzyść. Nie ustanawiają no
 - **US-01-007-KA-03:** Ten sam produkt może należeć do wielu zamówień, a jedno zamówienie może zawierać wiele produktów; powiązanie jest realizowane przez `OrderProduct`, nie przez pojedyncze ID produktu w zamówieniu.
 - **US-01-007-KA-04:** `OrderService` ma publiczny interfejs, implementację dziedziczącą po `BaseService` i odpowiednie VM.
 - **US-01-007-KA-05:** Zamówienie zawiera co najmniej jedną pozycję z istniejącym produktem i dodatnią ilością całkowitą. Pusta lista, niedodatnia ilość lub powtórzony produkt powodują `ArgumentException`; nieistniejący klient albo produkt — `KeyNotFoundException`. Błąd nie zapisuje zamówienia ani części pozycji.
-- **US-01-007-KA-06:** Usługa liczy i zapisuje `TotalAmount` w PLN jako sumę aktualnych cen produktów pomnożonych przez ilości. Dwie sztuki po 10 PLN i jedna po 15 PLN dają 35 PLN. Późniejsza zmiana ceny katalogowej nie zmienia zapisanej kwoty; edycja zamówienia przelicza ją według cen obowiązujących przy tej edycji. Pozycje nie mają odrębnej ceny historycznej w tym sprincie. Zgodnie z D12 ceny i wynik mają maksymalnie dwa miejsca po przecinku; przykładowo `2 × 10,01 + 15,02 = 35,04 PLN`. Obliczenie, wynik VM i odczyt w nowym kontekście SQL zachowują tę samą kwotę bez cichego zaokrąglania.
+- **US-01-007-KA-06:** Usługa liczy i zapisuje `TotalAmount` w PLN jako sumę aktualnych cen produktów pomnożonych przez ilości. Dwie sztuki po 10 PLN i jedna po 15 PLN dają 35 PLN. Późniejsza zmiana ceny katalogowej nie zmienia zapisanej kwoty; edycja zamówienia przelicza ją według cen obowiązujących przy tej edycji. Pozycje nie mają odrębnej ceny historycznej w tym sprincie. Zgodnie z D12 ceny i wynik mają maksymalnie dwa miejsca po przecinku; przykładowo `2 × 10,01 + 15,02 = 35,04 PLN`. Obliczenie, wynik VM i odczyt w nowym kontekście SQL zachowują tę samą kwotę bez cichego zaokrąglania. Kwota może wynosić najwyżej 792281625142643375935439503,35 PLN (D13); przekroczenie podczas obliczenia przy dodaniu lub edycji powoduje ArgumentException bez zmiany danych lub powiązań.
 - **US-01-007-KA-07:** Zapis i edycja zamówienia pozostawiają ilości `ProductStock` bez zmian.
 - **US-01-007-KA-08:** Próba edycji zamówienia przypisanego do faktury powoduje `ArgumentException` bez zapisu. Edycja jest możliwa po usunięciu powiązania przez usługę faktur, przy zachowaniu jej reguł.
 
@@ -250,7 +253,7 @@ Role biznesowe w opisach wskazują perspektywę i korzyść. Nie ustanawiają no
 
 **Opis:** Jako klient sklepu chcę, aby aplikacja wiązała fakturę z moimi zamówieniami, aby można było ustalić, których zamówień dotyczy dokument.
 
-**Źródła:** s. 12, rozdział 3 pkt 6; s. 13, `Invoice–Order` 1:M; s. 21, `InvoiceService`; D05, D06, D08, D12.
+**Źródła:** s. 12, rozdział 3 pkt 6; s. 13, `Invoice–Order` 1:M; s. 21, `InvoiceService`; D05, D06, D08, D12, D13.
 
 **Zakres:** encja `Invoice`, zmiana modelu zamówienia, relacja 1:M i autonomiczna usługa faktur. Zgodnie z D06 jest to prosta ewidencja na potrzeby ćwiczenia, bez podatków, automatycznej numeracji, płatności i eksportu PDF.
 
@@ -261,7 +264,7 @@ Role biznesowe w opisach wskazują perspektywę i korzyść. Nie ustanawiają no
 - **US-01-008-KA-03:** `InvoiceService` ma publiczny interfejs, implementację dziedziczącą po `BaseService` i odpowiednie VM.
 - **US-01-008-KA-04:** Faktura zapisuje ID, wymagany niepusty numer podany przez wywołującego i datę wystawienia. Numer musi być unikalny wśród innych faktur; powtórzenie numeru powoduje `ArgumentException` bez zapisu.
 - **US-01-008-KA-05:** Faktura wymaga co najmniej jednego istniejącego zamówienia, a wszystkie jej zamówienia należą do jednego klienta. Pusty zestaw lub różni klienci powodują `ArgumentException`; nieistniejące zamówienie — `KeyNotFoundException`. Zamówienie może nie mieć faktury przed przypisaniem, lecz nie może należeć do dwóch faktur.
-- **US-01-008-KA-06:** Kwota faktury jest sumą zapisanych `TotalAmount` jej zamówień. Dla zamówień na 35 i 20 PLN odczyt faktury pokazuje 55 PLN. Zgodnie z D12 kwoty mają maksymalnie dwa miejsca po przecinku; dla zamówień `35,04` i `20,01 PLN` wynik wynosi dokładnie `55,05 PLN` w VM i po odczycie nowym kontekstem SQL, bez cichego zaokrąglania.
+- **US-01-008-KA-06:** Kwota faktury jest sumą zapisanych `TotalAmount` jej zamówień. Dla zamówień na 35 i 20 PLN odczyt faktury pokazuje 55 PLN. Zgodnie z D12 kwoty mają maksymalnie dwa miejsca po przecinku; dla zamówień `35,04` i `20,01 PLN` wynik wynosi dokładnie `55,05 PLN` w VM i po odczycie nowym kontekstem SQL, bez cichego zaokrąglania. Kwota może wynosić najwyżej 792281625142643375935439503,35 PLN (D13); przekroczenie podczas sumowania przy dodaniu lub edycji powoduje ArgumentException bez zmiany faktury ani powiązań.
 - **US-01-008-KA-07:** Usługa pozwala aktualizować dane faktury i jej zestaw zamówień. Usunięcie powiązania zwalnia zamówienie z tej faktury; zestaw końcowy nadal musi zawierać co najmniej jedno zamówienie jednego klienta. Próba przypisania zamówienia należącego do innej faktury powoduje `ArgumentException`; błąd pozostawia poprzedni zestaw powiązań i dane bez zmian.
 
 **Zależności:** US-01-007, US-01-009.
@@ -289,7 +292,7 @@ Role biznesowe w opisach wskazują perspektywę i korzyść. Nie ustanawiają no
 
 **Opis:** Jako osoba weryfikująca WebStore chcę uruchomić testy usług biznesowych, aby potwierdzić działanie uzgodnionych operacji i wykrywać regresje.
 
-**Źródła:** s. 17–21, rozdziały 5.2–5.4; D02–D08, D12 i BUG-01-001 z recenzji K1.
+**Źródła:** s. 17–21, rozdziały 5.2–5.4; D02–D08, D12, D13 i BUG-01-001 z recenzji K1.
 
 **Zakres:** `WebStore.Tests` w solucji, testy produktu oraz `OrderService`, `InvoiceService`, `StoreService`, `AddressService`. xUnit jest wskazanym w PDF wariantem; testy mają działać na docelowej platformie .NET 10.
 
@@ -301,13 +304,13 @@ Role biznesowe w opisach wskazują perspektywę i korzyść. Nie ustanawiają no
 - **US-01-010-KA-04:** Wynik testu nie zależy od uruchomienia wcześniejszego testu ani od danych pozostawionych przez inne testy; test odczytu wszystkich produktów porównuje rezultat z danymi wejściowymi zestawu testowego, a nie z tym samym wynikiem po obu stronach asercji.
 - **US-01-010-KA-05:** Usługi są tworzone wraz z kontekstem, mapowaniem i logowaniem; testy potwierdzają poprawne przejście danych przez VM i encje. Końcowy wynik zaakceptowanego zakresu nie zawiera pominiętych kontroli wymaganych kryteriami.
 - **US-01-010-KA-06:** Zestaw testów sprawdza wspólne kryteria WU-01–WU-07 dla każdej z pięciu usług oraz operacje powiązań: adresy klienta, przypisanie pracownika i zestaw zamówień faktury. Przy błędzie operacji test porównuje stan przed i po wywołaniu, potwierdzając brak częściowego zapisu.
-- **US-01-010-KA-07:** Testy na SQL Server obejmują dodanie i aktualizację produktu z cenami `0,01`, `1,2`, `1,23` oraz równoważnym `1,2300`; porównują wejście, wynik VM, odczyt usługi i dane z nowego kontekstu. Dla `1,234`, `1,123456789` i `0,000000001` oba rodzaje zapisu kończą się `ArgumentException`; porównanie stanu przed i po dowodzi braku nowego produktu, zmiany starej ceny oraz innych danych lub powiązań. Dodatkowe scenariusze sprawdzają obliczenia i trwałość kwot `35,04 PLN` zamówienia oraz `55,05 PLN` faktury z KA-06 właściwych stories. Pełny zestaw dotychczasowych testów nadal przechodzi.
+- **US-01-010-KA-07:** Testy na SQL Server obejmują dodanie i aktualizację produktu z cenami `0,01`, `1,2`, `1,23` oraz równoważnym `1,2300`; porównują wejście, wynik VM, odczyt usługi i dane z nowego kontekstu. Dla `1,234`, `1,123456789` i `0,000000001` oba rodzaje zapisu kończą się `ArgumentException`; porównanie stanu przed i po dowodzi braku nowego produktu, zmiany starej ceny oraz innych danych lub powiązań. Dodatkowe scenariusze sprawdzają obliczenia i trwałość kwot `35,04 PLN` zamówienia oraz `55,05 PLN` faktury z KA-06 właściwych stories. Pełny zestaw dotychczasowych testów nadal przechodzi. Testy D13 potwierdzają zapis dokładnej kwoty maksymalnej oraz odrzucenie wyższej ceny i przekroczenia kwoty przez sumowanie lub mnożenie, w tym o jeden grosz, bez jakichkolwiek zapisów przy dodaniu lub edycji.
 
 **Zależności:** US-01-001–009; testy powinny powstawać razem z realizowanymi funkcjonalnościami, a pełny zestaw jest wynikiem końcowym.
 
 ## Wspólne kryteria usług
 
-Źródło: D07–D08, D12 oraz przykład `ProductService` z PDF. Każde kryterium sprawdza się dla wszystkich usług, których dotyczy; spełnienie go przez samą usługę produktów nie wystarcza. Nazwy metod czterech nowych usług i szczegóły techniczne VM dobiera programista zgodnie z konwencjami projektu i poniższym zachowaniem.
+Źródło: D07–D08, D12, D13 oraz przykład `ProductService` z PDF. Każde kryterium sprawdza się dla wszystkich usług, których dotyczy; spełnienie go przez samą usługę produktów nie wystarcza. Nazwy metod czterech nowych usług i szczegóły techniczne VM dobiera programista zgodnie z konwencjami projektu i poniższym zachowaniem.
 
 | ID | Mierzalny warunek |
 | --- | --- |
@@ -315,7 +318,7 @@ Role biznesowe w opisach wskazują perspektywę i korzyść. Nie ustanawiają no
 | WU-02 | W dodaniu/aktualizacji brak ID albo zero tworzy rekord, dodatnie ID aktualizuje istniejący, nieistniejące dodatnie ID powoduje `KeyNotFoundException`, a ujemne — `ArgumentException`. |
 | WU-03 | Odczyt pojedynczy zwraca pierwszy pasujący obiekt albo `null`. Lista z filtrem zawiera wszystkie i wyłącznie pasujące obiekty; lista bez filtra — wszystkie. Brak wyników daje pustą kolekcję. Nie ustala się dodatkowego sortowania ani paginacji. |
 | WU-04 | `null` wejściowego VM lub wymaganego predykatu powoduje `ArgumentNullException`. Opcjonalny filtr kolekcji może być `null`. |
-| WU-05 | Niepoprawne dane i naruszenie reguł biznesowych powodują `ArgumentException`. Wskazanie nieistniejącego ID powoduje `KeyNotFoundException`; istniejący rekord niewłaściwego typu nie tworzy powiązania. Wymagane napisy nie mogą być puste. Nie dodaje się arbitralnych limitów biznesowych długości ani wartości. D12 jawnie ogranicza precyzję cen i kwot PLN do dwóch miejsc po przecinku: większa precyzja powoduje `ArgumentException` bez zapisu, a nie ciche zaokrąglenie. |
+| WU-05 | Niepoprawne dane i naruszenie reguł biznesowych powodują `ArgumentException`. Wskazanie nieistniejącego ID powoduje `KeyNotFoundException`; istniejący rekord niewłaściwego typu nie tworzy powiązania. Wymagane napisy nie mogą być puste. Nie dodaje się arbitralnych limitów biznesowych długości ani wartości. D12 jawnie ogranicza precyzję cen i kwot PLN do dwóch miejsc po przecinku: większa precyzja powoduje `ArgumentException` bez zapisu, a nie ciche zaokrąglenie. D13 ustala maksymalną cenę i kwotę 792281625142643375935439503,35 PLN; przekroczenie powoduje ArgumentException bez zapisu. |
 | WU-06 | Niepoprawna operacja nie pozostawia częściowego zapisu danych ani powiązań. Operacje na adresach, pracownikach i fakturach zachowują reguły US-01-005–008 również przy zmianie istniejących powiązań. |
 | WU-07 | Usługi korzystają z wejściowych i wynikowych VM, mapowania, kontekstu i loggera zgodnie z `BaseService`; wyniki oraz błędy są dostępne wywołującemu. Weryfikacja logowania błędów nie zastępuje sprawdzenia zwracanego wyniku lub wyjątku. |
 
@@ -344,11 +347,11 @@ Wszystkie pięć usług ma interfejs `I…Service` w `WebStore.Services/Interfac
 
 ## Pytania otwarte do lidera
 
-Brak.
+Brak. P11 rozstrzygnięto decyzją D13.
 
 ## Akceptacje
 
-- Rodzaj: **STORIES**, akceptacja US3 zachowana jako podstawa recenzji K1 i niezmienionego zakresu. W zmienionym zakresie zastępuje ją propozycja US4, która **nie jest jeszcze zaakceptowana**.
+- Rodzaj: **STORIES**, akceptacja US3 zachowana jako podstawa recenzji K1 i niezmienionego zakresu. W zmienionym zakresie zastąpiona akceptacją US4 poniżej.
 - Lider: lider projektu — użytkownik czatu.
 - Data decyzji: 2026-10-24, Europe/Warsaw. Zapisano o 11:19 (czas odczytu decyzji; dokładny czas wysłania wiadomości nie jest dostępny).
 - Cytat: „Akceptuję US3 dla sprintu 01 oraz gałąź main w repozytorium Fecasu/ZPI”.
@@ -360,11 +363,44 @@ Brak.
 - Cytat: „Akceptuję K1 (commit 8108edc) dla sprintu 01”.
 - Zakres: **K1**, commit `8108edc7299bc424649a72110e9a5d648c49efba`, cała **US3**, **US-01-001–US-01-010** i **WU-01–WU-07**.
 
-**Oczekująca decyzja:** akceptacja US4 w zmienionym zakresie US-01-003, US-01-007, US-01-008, US-01-010 i WU-05 według tabeli zmian oraz pełnych kryteriów powyżej. Rozstrzygnięcie D12 nie jest taką akceptacją. K1 otrzymała wynik recenzji `POPRAWKI`; K2 nie została jeszcze przygotowana.
+- Rodzaj: **STORIES**, aktualna US4 w zmienionym zakresie.
+- Lider: lider projektu — użytkownik czatu.
+- Data decyzji: 2026-10-24, Europe/Warsaw. Zapisano o 15:35 (czas odczytu decyzji; dokładny czas wysłania wiadomości nie jest dostępny).
+- Cytat: „Akceptuję US4 w podanym zakresie. Przygotuj K2.”
+- Zakres: zmiany US4 w **US-01-003, US-01-007, US-01-008, US-01-010 oraz WU-05**, przedstawione w karcie z commita `abeb47dc332d845f08917a2ab01314bbcbc83219`. Pozostały zakres utrzymuje akceptację US3. Decyzja upoważnia do przygotowania K2; nie jest akceptacją przyszłego kodu.
+
+- Rodzaj: **STORIES — przyjęcie uzupełnienia P11 do US4**, scalonego jako US5.
+- Lider: lider projektu — użytkownik czatu.
+- Data decyzji: 2026-10-24, Europe/Warsaw. Zapisano o 15:45 (czas odczytu decyzji; dokładny czas wysłania wiadomości nie jest dostępny).
+- Cytat: „Przyjmuję proponowany limit i ArgumentException bez zapisu.”
+- Zakres: wyłącznie przedstawiony w pytaniu P11 limit `792281625142643375935439503,35 PLN` dla ceny produktu oraz wyliczanej kwoty zamówienia/faktury, z `ArgumentException` bez zapisu przy przekroczeniu. Uzupełnia przyjętą US4 w kryteriach wskazanych przy US5; nie oznacza akceptacji kodu K2 ani innych zmian wymagań.
 
 ## Implementacja
 
-### Rewizja zaakceptowana przez lidera
+### K2 — poprawka według US4 i przyjętego P11 (US5)
+
+**Rewizja do akceptacji:** [K2 — commit 47e0afb08c99162d7e1b143f970535801d0fcbdf](https://github.com/Fecasu/ZPI/commit/47e0afb08c99162d7e1b143f970535801d0fcbdf). Obejmuje poprawkę BUG-01-001 zgodnie z US4 i przyjętym P11, scalonymi jako US5. Zachowuje pozostałe funkcje K1. Kolejny commit karty sprintu opisuje tę samą wersję kodu i testów.
+
+| Zakres | Dostarczona zmiana | Weryfikacja programisty |
+| --- | --- | --- |
+| US-01-003-KA-08, WU-05, BUG-01-001 | `Pln.Validate` kontroluje cenę przed mapowaniem i zapisem w `ProductService`: maksymalnie dwa miejsca po przecinku oraz limit D13. Końcowe zera nie zmieniają wartości. | `ProductTests`: ceny 0,01; 1,2; 1,23; 1,2300; limit D13; odrzucenie 1,234; 1,123456789; 1,987654321; 0,000000001 oraz wartości ponad limit. Dodanie przez null/0 i aktualizacja sprawdzane wraz ze stanem całej bazy i logowaniem. |
+| US-01-007-KA-06, US-01-008-KA-06, WU-06 | `Pln.Total` mnoży i sumuje całkowite grosze; przepełnienie zamienia na `ArgumentException` przed zmianą encji. `OrderService` i `InvoiceService` używają tej samej reguły. | Kwoty 35,04 i 55,05 PLN oraz ich aktualizacje; dokładny limit D13 przechodzi. Suma przekraczająca limit o jeden grosz i przekroczenie przez mnożenie są odrzucane bez zmiany danych lub powiązań. |
+| Trwałość kwot, US-01-009 | Nowa migracja `20261024133851_MoneyPrecision` zmienia trzy kolumny na `decimal(31,2)`. Stara migracja pozostaje niezmieniona. Kontrola z blokadami w transakcji zatrzymuje migrację, jeśli istniejąca wartość wymagałaby zaokrąglenia. | `DatabaseTests` sprawdza rzeczywisty schemat; `MoneyMigrationTests` potwierdza zachowanie wartości i relacji przy aktualizacji starej bazy oraz brak zmian danych/schematu po odrzuceniu każdej z trzech kolumn. |
+| US-01-010-KA-07 i regresja dotychczasowego zakresu | Testy SQL porównują VM, odczyt usługi i nowy kontekst; niepoprawne operacje korzystają z pełnego porównania stanu `Rejected`. | **100/100 testów zaliczonych**, bez pominięć; 81 wcześniejszych przypadków i 19 nowych. |
+
+| Kontrola K2 — 2026-10-24 | Wynik |
+| --- | --- |
+| `dotnet build --no-restore` | Sześć projektów, **0 błędów i 0 ostrzeżeń**. |
+| `dotnet test --no-build --no-restore --logger 'trx;LogFileName=sprint-01-k2.trx' --results-directory TestResults` | **100 zaliczonych, 0 niepowodzeń, 0 pominiętych**, 18 s. [Raport TRX K2](dowody/sprint-01-k2-tests.trx). |
+| `dotnet ef database update --project WebStore.DAL --startup-project WebStore.DAL --no-build` | Migracja MoneyPrecision zastosowana do lokalnej bazy aplikacji, wynik `Done.`. |
+| `dotnet run --project WebStore.Web --no-build --no-restore` i kontrola HTTP | Host działa na `http://localhost:5100`; dokument HTML i wskazany przez niego skrypt React `/assets/index-c_qlk6mM.js` zwracają HTTP 200. Kod klienta nie zmienił się względem K1. |
+| `git diff --cached --check` przed commitem kodu | Brak błędów białych znaków. |
+
+Pierwsza próba granicy `decimal.MaxValue` wykazała ograniczenie skali SQLClient i doprowadziła do jawnej decyzji P11. Końcowe testy sprawdzają przyjęty limit i kontrolowane odrzucenie większych wartości. Instrukcja aktualizacji bazy, reguły kwot i reakcja na niezgodne dane znajdują się w README.
+
+**Stan poprawki BUG-01-001:** naprawa potwierdzona testami programisty, oczekuje na niezależną recenzję po akceptacji K2. **Pozostałe znane problemy implementacji:** brak w sprawdzonym zakresie. Limit D13 jest przyjętą regułą, a nie otwartą usterką. Migracja celowo zatrzymuje się na dawnych danych z większą precyzją; wymagałyby one jawnej decyzji o korekcie zamiast automatycznego zaokrąglania.
+
+### Historyczna K1 zaakceptowana przez lidera
 
 **K1:** [commit 8108edc7299bc424649a72110e9a5d648c49efba](https://github.com/Fecasu/ZPI/commit/8108edc7299bc424649a72110e9a5d648c49efba). Zakres: wszystkie stories US3, czyli US-01-001–US-01-010 oraz WU-01–WU-07. Commit zawiera kod, migrację, testy, instrukcję uruchomienia, dokumenty ról i dowody testów. Późniejszy commit aktualizujący tę kartę opisuje tę samą K1 i nie zmienia kodu ani testów.
 
@@ -518,7 +554,7 @@ Razem: **68 kryteriów US3, 63 ZALICZONE, 5 NIEZALICZONE, 0 NIEZWERYFIKOWANE**. 
 
 ### BUG-01-001 — cena zwrócona przez usługę różni się od utrwalonej
 
-- **Priorytet:** P2. **Stan:** OTWARTA, niepoprawiona w K1.
+- **Priorytet:** P2. **Stan:** niepoprawiona w ocenionej K1; poprawka K2 potwierdzona przez programistę i oczekuje na recenzję. Usterka nie jest jeszcze zamknięta przez recenzenta.
 - **Kryteria:** US-01-003-KA-01 i KA-02, US-01-009-KA-04, WU-01; luka w weryfikacji US-01-010-KA-05.
 - **Wpływ:** wywołujący otrzymuje potwierdzenie ceny innej niż późniejszy odczyt. Zmiana jest cicha; kolejne operacje korzystają z ceny z bazy.
 - **Warunki:** K1, rzeczywista baza SQL Server po migracji, istniejące Supplier i Category, pozostałe pola produktu poprawne.
@@ -527,10 +563,10 @@ Razem: **68 kryteriów US3, 63 ZALICZONE, 5 NIEZALICZONE, 0 NIEZWERYFIKOWANE**. 
 - **Rzeczywiste:** po dodaniu VM ma `1.123456789`, baza `1.12345679`; po aktualizacji VM ma `1.987654321`, baza `1.98765432`. Odczyt nowym kontekstem potwierdza utratę precyzji. Dodatkowo `0.000000001m` dochodzi do SQL i kończy się `DbUpdateException` z ograniczenia dodatniej ceny; nie zapisuje nowego produktu.
 - **Przyczyna:** [ApplicationDbContext.cs](../WebStore.DAL/EF/ApplicationDbContext.cs), linia 56, ogranicza cenę do SQL `decimal(28,8)`. [ProductService.cs](../WebStore.Services/ConcreteServices/ProductService.cs), linie 32–33, po `SaveChanges` mapuje obiekt zachowujący wartość wejściową. Pola kwot zamówień i faktur mają taką samą skalę w konfiguracji EF (linie 57–58).
 - **Dowód:** R4. Próba została wykonana w odrębnej bazie, usuniętej po zakończeniu.
-- **Przekazanie:** rozstrzygnięcie P10 ustala maksymalnie dwa miejsca po przecinku i `ArgumentException` bez zapisu dla większej precyzji. Ponieważ doprecyzowuje zaakceptowane kryteria, następnym etapem jest analiza US4 i akceptacja zmienionego zakresu, następnie poprawka K2, akceptacja K2 i ponowna recenzja.
+- **Przekazanie:** po recenzji przyjęto US4 i uzupełnienie P11, a programista przygotował K2. Następny krok to akceptacja K2 przez lidera i niezależna ponowna recenzja. Historyczne wyniki K1 pozostają zapisane powyżej.
 
 ## Jak rozpocząć / jak kontynuować
 
 Aby uruchomić aplikację, wykonaj polecenia z [README.md](../README.md). Lider nie musi tworzyć żadnego pliku, folderu ani gałęzi w repozytorium.
 
-Recenzja K1 zakończyła się wynikiem `POPRAWKI`; błąd BUG-01-001 pozostaje otwarty. US4 jest gotowa do przeglądu. Aby rozpocząć poprawkę, napisz: **„Akceptuję US4 dla sprintu 01 w zmienionym zakresie US-01-003, US-01-007, US-01-008, US-01-010 oraz WU-05. Przygotuj K2.”** Programista wprowadzi poprawkę i testy, a następnie przedstawi konkretny commit K2 do osobnej akceptacji przed recenzją.
+K2 jest gotowa. Aby rozpocząć recenzję, napisz: **„Akceptuję K2 (commit 47e0afb) dla sprintu 01.”** Recenzent zweryfikuje poprawkę BUG-01-001 i aktualny zakres US4 z przyjętym P11, zapisany jako US5. Akceptacja K1 nie obejmuje tej zmiany kodu.
